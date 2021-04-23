@@ -1,5 +1,10 @@
 package inbound
 
-func StartServer() error {
-	return nil
+import (
+	gin "github.com/gin-gonic/gin"
+)
+
+func StartServer() {
+	r := gin.Default()
+	r.Run()
 }
