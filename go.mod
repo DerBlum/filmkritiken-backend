@@ -1,4 +1,4 @@
-module filmkritiken-backend
+module github.com/DerBlum/filmkritiken-backend
 
 go 1.16
 
