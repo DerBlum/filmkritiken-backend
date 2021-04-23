@@ -1,0 +1,9 @@
+openapi: 3.0.3
+info:
+  title: Filmkritiken-Backend
+  description: Filmkritiken-Backend
+  version: 1.0.0
+servers:
+  - url: 'http://filmkritiken-backend'
+paths:
+  
