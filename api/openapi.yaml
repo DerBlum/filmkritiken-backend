@@ -3,7 +3,135 @@ info:
   title: Filmkritiken-Backend
   description: Filmkritiken-Backend
   version: 1.0.0
+
 servers:
-  - url: 'http://filmkritiken-backend'
+  - url: "http://srv-captain--filmkritiken-backend"
+
 paths:
-  
+  /filmkritiken:
+    get:
+      description: abc
+      #      parameters:
+      #        - in: query
+      #          name: limit
+      #          required: false
+      #          schema:
+      #            type: integer
+      #            minimum: 1
+      #            maximum: 50
+      #            default: 10
+      #        - in: query
+      #          name: offset
+      #          required: false
+      #          schema:
+      #            type: integer
+      #            minimum: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Filmkritiken"
+
+components:
+  schemas:
+    Filmkritiken:
+      type: object
+      properties:
+        details:
+          $ref: "#/components/schemas/FilmkritikenDetails"
+        film:
+          $ref: "#/components/schemas/Film"
+        bewertungen:
+          type: array
+          items:
+            $ref: "#/components/schemas/Bewertung"
+      required:
+        - details
+        - film
+        - bewertungen
+    Film:
+      type: object
+      properties:
+        titel:
+          type: string
+          example: John Wick
+        altersfreigabe:
+          type: integer
+          minimum: 0
+          maximum: 18
+          example: 16
+        erscheinungsjahr:
+          type: integer
+          minimum: 1900
+          maximum: 2100
+          example: 2014
+        regie:
+          type: string
+          example: Chad Stahelski, David Leitch
+        laenge:
+          type: integer
+          minimum: 1
+          maximum: 600
+          example: 101
+        originaltitel:
+          type: string
+          example: John Wick
+        originalsprache:
+          type: string
+          example: Englisch
+        produktionsland:
+          type: string
+          example: Vereinigte Staaten
+        image:
+          $ref: "#/components/schemas/Image"
+      required:
+        - titel
+
+    #        image:
+    #          type:
+    #            $ref: #TODO
+    Bewertung:
+      type: object
+      properties:
+        von:
+          type: string
+          example: Stefan
+        wertung:
+          type: integer
+          minimum: 1
+          maximum: 10
+        enthaltung:
+          description: Wenn gesetzt, gilt die Bewertung als aktive Enthaltung.
+          type: boolean
+          default: false
+      required:
+        - von
+        - wertung
+    Image:
+      type: object
+      properties:
+        source:
+          type: string
+          example: JohnWick.jpg
+        copyright:
+          type: string
+          example: IMDb
+      required:
+        - source
+        - copyright
+    FilmkritikenDetails:
+      type: object
+      properties:
+        beitragvon:
+          type: string
+          example: Stefan
+        besprochenam:
+          type: string
+          description: Datum nach ISO 8601 / EN 28601, an dem der Film besprochen wurde.
+          example: "2021-04-24"
+      required:
+        - beitragvon
