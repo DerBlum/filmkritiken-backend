@@ -1,4 +1,5 @@
 package filmkritiken
 
-type Filmkritiken struct {
-}
+type (
+	Filmkritiken struct{}
+)

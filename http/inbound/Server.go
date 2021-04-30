@@ -5,12 +5,16 @@ import (
 	gin "github.com/gin-gonic/gin"
 )
 
-func StartServer() {
+func StartServer() error {
 
 	filmkritikenService := filmkritiken.NewFilmkritikenService()
 	filmkritikenHandler := NewFilmkritikenHandler(filmkritikenService)
 
 	r := gin.Default()
 	r.GET("/filmkritiken", filmkritikenHandler.handleGetFilmkritiken)
-	r.Run()
+	err := r.Run()
+
+	if err != nil {
+		return err
+	}
 }

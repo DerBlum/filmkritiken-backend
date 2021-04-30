@@ -1,10 +1,12 @@
 package filmkritiken
 
-type FilmkritikenService interface {
-	GetFilmkritiken(limit int, offset int) ([]*Filmkritiken, error)
-}
+type (
+	FilmkritikenService interface {
+		GetFilmkritiken(limit int, offset int) ([]*Filmkritiken, error)
+	}
 
-type filmkritikenServiceImpl struct{}
+	filmkritikenServiceImpl struct{}
+)
 
 func NewFilmkritikenService() FilmkritikenService {
 	return &filmkritikenServiceImpl{}

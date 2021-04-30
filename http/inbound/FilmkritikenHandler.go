@@ -35,7 +35,7 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 		offset = parsedValue
 	}
 
-	filmkritiken, err := h.filmkritikenService.GetFilmkritiken(limit, offset)
+	result, err := h.filmkritikenService.GetFilmkritiken(limit, offset)
 	if err != nil {
 		// TODO better error handling
 		ctx.Writer.WriteHeader(http.StatusInternalServerError)
@@ -43,7 +43,7 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, filmkritiken)
+	ctx.JSON(200, result)
 
 }
 
