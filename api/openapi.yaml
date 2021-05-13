@@ -90,10 +90,6 @@ components:
           $ref: "#/components/schemas/Image"
       required:
         - titel
-
-    #        image:
-    #          type:
-    #            $ref: #TODO
     Bewertung:
       type: object
       properties:

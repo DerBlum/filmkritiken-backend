@@ -1,4 +1,6 @@
-FROM golang:latest as build
+FROM golang:alpine as build
+
+RUN apk --no-cache add make git gcc libtool musl-dev ca-certificates dumb-init 
 
 WORKDIR /go/src/app
 COPY . .
