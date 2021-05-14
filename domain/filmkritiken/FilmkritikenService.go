@@ -29,11 +29,15 @@ func NewFilmkritikenService(filmkritikenRepository FilmkritikenRepository) Filmk
 }
 
 func (f *filmkritikenServiceImpl) GetFilmkritiken(ctx context.Context, filter *FilmkritikenFilter) ([]*Filmkritiken, error) {
-	return make([]*Filmkritiken, 0), nil
+	filmkritiken, err := f.filmkritikenRepository.GetFilmkritiken(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	return filmkritiken, nil
 }
 
 func (f *filmkritikenServiceImpl) CreateFilm(ctx context.Context, film *Film, von string, besprochenam *time.Time) (*Filmkritiken, error) {
-
 	filmkritiken := &Filmkritiken{
 		Film: film,
 		Details: &FilmkritikenDetails{
@@ -52,6 +56,5 @@ func (f *filmkritikenServiceImpl) CreateFilm(ctx context.Context, film *Film, vo
 }
 
 func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId string, von string) error {
-
 	return nil
 }

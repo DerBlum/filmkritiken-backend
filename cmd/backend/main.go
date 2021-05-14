@@ -6,7 +6,8 @@ import (
 )
 
 func main() {
-	log.Info("App running")
+	//log.SetLevel(log.DebugLevel)
+	log.Info("Starting App")
 
 	httpInbound.StartServer()
 

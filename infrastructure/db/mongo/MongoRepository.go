@@ -25,7 +25,8 @@ type mongoDbRepository struct {
 func NewMongoDbRepository(ctx context.Context) (*mongoDbRepository, error) {
 
 	mongoDbRepository := &mongoDbRepository{
-		mongoServer: "mongodb://mongorootuser:mongorootpw@mongodb:27017",
+		//mongoServer: "mongodb://mongorootuser:mongorootpw@mongodb:27017",
+		mongoServer: "mongodb://mongorootuser:mongorootpw@localhost:27017",
 	}
 	return mongoDbRepository, mongoDbRepository.init(ctx)
 }
@@ -48,7 +49,25 @@ func (repo *mongoDbRepository) init(ctx context.Context) error {
 }
 
 func (repo *mongoDbRepository) GetFilmkritiken(ctx context.Context, filter *filmkritiken.FilmkritikenFilter) ([]*filmkritiken.Filmkritiken, error) {
-	return nil, nil
+	mongoFilter := bson.D{}
+	// filter.
+	findOptions := options.Find().
+		SetSort(bson.D{{"details.besprochenam", -1}}).
+		SetLimit(int64(filter.Limit)).
+		SetSkip(int64(filter.Offset))
+
+	cursor, err := repo.database.Collection(filmkritikenCollectionName).Find(ctx, mongoFilter, findOptions)
+	if err != nil {
+		return nil, err
+	}
+	filmkritiken := make([]*filmkritiken.Filmkritiken, 0)
+
+	err = cursor.All(ctx, &filmkritiken)
+	if err != nil {
+		return nil, err
+	}
+
+	return filmkritiken, nil
 }
 
 func (repo *mongoDbRepository) SaveFilmkritiken(ctx context.Context, filmkritiken *filmkritiken.Filmkritiken) error {

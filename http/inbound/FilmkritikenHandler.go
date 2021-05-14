@@ -36,11 +36,11 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 
 	queryParams := ctx.Request.URL.Query()
 	parsedValue, err := parseIntFromQueryParam(queryParams, "limit")
-	if err != nil {
+	if err == nil {
 		limit = parsedValue
 	}
 	parsedValue, err = parseIntFromQueryParam(queryParams, "offset")
-	if err != nil {
+	if err == nil {
 		offset = parsedValue
 	}
 
