@@ -2,7 +2,6 @@ package mongo
 
 import (
 	"context"
-	"crypto/tls"
 
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	"go.mongodb.org/mongo-driver/bson"
@@ -26,7 +25,7 @@ type mongoDbRepository struct {
 func NewMongoDbRepository(ctx context.Context) (*mongoDbRepository, error) {
 
 	mongoDbRepository := &mongoDbRepository{
-		mongoServer: "mongodb://mongorootuser:mongorootpw@localhost:27017",
+		mongoServer: "mongodb://mongorootuser:mongorootpw@mongodb:27017",
 	}
 	return mongoDbRepository, mongoDbRepository.init(ctx)
 }
@@ -34,10 +33,6 @@ func NewMongoDbRepository(ctx context.Context) (*mongoDbRepository, error) {
 func (repo *mongoDbRepository) init(ctx context.Context) error {
 
 	clientOptions := options.Client()
-	clientOptions.TLSConfig = &tls.Config{
-		InsecureSkipVerify: true,
-	}
-
 	client, err := mongo.NewClient(clientOptions.ApplyURI(repo.mongoServer))
 	if err != nil {
 		return err

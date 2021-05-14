@@ -18,3 +18,7 @@ services:
             - ME_CONFIG_MONGODB_ADMINPASSWORD=mongorootpw
         ports:
             - 8081:8081
+networks: 
+    default:
+        external: 
+            name: filmkritiken
