@@ -15,3 +15,5 @@ main
 # IntelliJ
 .idea/
 *.iml
+cmd/backend/__debug_bin
+mongo/

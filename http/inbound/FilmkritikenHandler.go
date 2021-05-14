@@ -9,6 +9,7 @@ import (
 
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	gin "github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 type (
@@ -50,7 +51,7 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 	}
 	result, err := h.filmkritikenService.GetFilmkritiken(ctx.Request.Context(), filter)
 	if err != nil {
-		// TODO better error handling
+		log.Errorf("Could not get Filmkritiken from DB: %v", err)
 		ctx.Writer.WriteHeader(http.StatusInternalServerError)
 		ctx.Writer.WriteString(err.Error())
 		return
@@ -60,24 +61,24 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 
 }
 
-func (h *filmkritikenHandler) handleCreateFilm(ctx *gin.Context) {
+func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
 
 	req := &FilmRequest{}
-	err := ctx.ShouldBindJSON(req)
+	err := ginCtx.ShouldBindJSON(req)
 	if err != nil {
-		// TODO better error handling
-		ctx.AbortWithStatus(http.StatusBadRequest)
+		log.Error("Could not map json to FilmRequest")
+		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	result, err := h.filmkritikenService.CreateFilm(ctx.Request.Context(), req.Film, req.Von, req.BesprochenAm)
+	result, err := h.filmkritikenService.CreateFilm(ginCtx.Request.Context(), req.Film, req.Von, req.BesprochenAm)
 	if err != nil {
-		ctx.Writer.WriteHeader(http.StatusInternalServerError)
-		ctx.Writer.WriteString(err.Error())
+		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
+		ginCtx.Writer.WriteString(err.Error())
 		return
 	}
 
-	ctx.JSON(200, result)
+	ginCtx.JSON(200, result)
 }
 
 func parseIntFromQueryParam(queryParams url.Values, paramName string) (int, error) {

@@ -4,6 +4,11 @@ import (
 	"time"
 )
 
+const (
+	Context_Username = "username"
+	Context_TraceId  = "traceId"
+)
+
 type (
 	Filmkritiken struct {
 		Id          string               `json:"id" bson:"_id"`

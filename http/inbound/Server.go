@@ -17,9 +17,15 @@ func StartServer() error {
 	filmkritikenService := filmkritiken.NewFilmkritikenService(mongoDbRepository)
 	filmkritikenHandler := NewFilmkritikenHandler(filmkritikenService)
 
+	handlers := []gin.HandlerFunc{
+		TraceIdMiddleware,
+	}
+
 	r := gin.Default()
-	r.GET("/filmkritiken", filmkritikenHandler.handleGetFilmkritiken)
-	r.POST("/film", filmkritikenHandler.handleCreateFilm)
+	api := r.Group("/api", handlers...)
+
+	api.GET("/filmkritiken", filmkritikenHandler.handleGetFilmkritiken)
+	api.POST("/film", NewAuthHandler([]string{"film.add"}), filmkritikenHandler.handleCreateFilm)
 	err = r.Run()
 
 	if err != nil {
