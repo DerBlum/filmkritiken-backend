@@ -1,0 +1,70 @@
+{
+	"info": {
+		"_postman_id": "868937ea-4317-40a9-87ba-97965834f30c",
+		"name": "Filmkritiken",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Film",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"film\": {\r\n        \"titel\": \"Pulp Fiction\"\r\n    },\r\n    \"von\": \"Stefan\",\r\n    \"besprochenam\": \"2021-05-18T12:00:00Z\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/film",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"film"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filmkritiken",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/filmkritiken?limit=10&offset=0",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"filmkritiken"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
