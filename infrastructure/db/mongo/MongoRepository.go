@@ -11,30 +11,28 @@ import (
 )
 
 const (
-	databaseName               = "filmkritiken"
 	filmkritikenCollectionName = "filmkritiken"
 )
 
 var updateOpts = options.Update().SetUpsert(true)
 
+type MongoDbConfig struct {
+	ConnectionString string `env:"MONGODB_CONNECTION_URI,unset"`
+	Database         string `env:"MONGODB_DATABASE"`
+}
+
 type mongoDbRepository struct {
-	mongoServer string
-	database    *mongo.Database
+	database *mongo.Database
 }
 
-func NewMongoDbRepository(ctx context.Context) (*mongoDbRepository, error) {
-
-	mongoDbRepository := &mongoDbRepository{
-		//mongoServer: "mongodb://mongorootuser:mongorootpw@mongodb:27017",
-		mongoServer: "mongodb://mongorootuser:mongorootpw@localhost:27017",
-	}
-	return mongoDbRepository, mongoDbRepository.init(ctx)
+func NewMongoDbRepository(ctx context.Context, config *MongoDbConfig) (*mongoDbRepository, error) {
+	mongoDbRepository := &mongoDbRepository{}
+	return mongoDbRepository, mongoDbRepository.init(ctx, config)
 }
 
-func (repo *mongoDbRepository) init(ctx context.Context) error {
-
+func (repo *mongoDbRepository) init(ctx context.Context, config *MongoDbConfig) error {
 	clientOptions := options.Client()
-	client, err := mongo.NewClient(clientOptions.ApplyURI(repo.mongoServer))
+	client, err := mongo.NewClient(clientOptions.ApplyURI(config.ConnectionString))
 	if err != nil {
 		return err
 	}
@@ -44,7 +42,7 @@ func (repo *mongoDbRepository) init(ctx context.Context) error {
 		return err
 	}
 
-	repo.database = client.Database(databaseName)
+	repo.database = client.Database(config.Database)
 	return nil
 }
 

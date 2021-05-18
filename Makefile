@@ -15,4 +15,5 @@ run-docker:
 		--network filmkritiken \
 		--name filmkritiken-backend \
 		-p 8080:8080 \
+		--env-file ./config/local.env \
 		filmkritiken-backend
