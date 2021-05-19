@@ -53,7 +53,7 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 	if err != nil {
 		log.Errorf("Could not get Filmkritiken from DB: %v", err)
 		ctx.Writer.WriteHeader(http.StatusInternalServerError)
-		ctx.Writer.WriteString(err.Error())
+		ctx.Writer.WriteString("Could not get Filmkritiken from DB")
 		return
 	}
 
