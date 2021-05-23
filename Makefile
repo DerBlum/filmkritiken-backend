@@ -2,8 +2,9 @@ build:
 	go build -v ./cmd/backend/main.go
 test:
 	go test -v ./...
+
 run:
-	go run ./cmd/backend/main.go
+	bash -c "set -a; source ./config/local.env; set +a && go run cmd/backend/main.go"
 run-docker:
 	docker network create filmkritiken || true
 	docker-compose up -d
@@ -15,5 +16,5 @@ run-docker:
 		--network filmkritiken \
 		--name filmkritiken-backend \
 		-p 8080:8080 \
-		--env-file ./config/local.env \
+		--env-file ./config/local-docker.env \
 		filmkritiken-backend
