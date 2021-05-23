@@ -5,11 +5,13 @@ import (
 )
 
 const (
-	Context_Username = "username"
-	Context_TraceId  = "traceId"
+	Context_Username ContextKey = "username"
+	Context_TraceId  ContextKey = "traceId"
 )
 
 type (
+	ContextKey string
+
 	Filmkritiken struct {
 		Id          string               `json:"id" bson:"_id"`
 		Details     *FilmkritikenDetails `json:"details"`

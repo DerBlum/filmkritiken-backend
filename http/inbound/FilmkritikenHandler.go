@@ -19,6 +19,21 @@ type (
 		BesprochenAm *time.Time         `json:"besprochenam"`
 	}
 
+	SetBewertungRequest struct {
+		FilmkritikenId string `json:"filmkritikenId"`
+		Wertung        int    `json:"wertung"`
+	}
+
+	SetBewertungBulkRequest struct {
+		FilmkritikenId string               `json:"filmkritikenId"`
+		Bewertungen    []*BenutzerBewertung `json:"benutzerBewertungen"`
+	}
+
+	BenutzerBewertung struct {
+		Bewertung int    `json:"bewertung"`
+		Benutzer  string `json:"benutzer"`
+	}
+
 	filmkritikenHandler struct {
 		filmkritikenService filmkritiken.FilmkritikenService
 	}
@@ -57,7 +72,7 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, result)
+	ctx.JSON(http.StatusOK, result)
 
 }
 
@@ -78,7 +93,51 @@ func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
 		return
 	}
 
-	ginCtx.JSON(200, result)
+	ginCtx.JSON(http.StatusOK, result)
+}
+
+func (h *filmkritikenHandler) handleSetBewertung(ginCtx *gin.Context) {
+
+	req := &SetBewertungRequest{}
+	err := ginCtx.ShouldBindJSON(req)
+	if err != nil {
+		log.Error("Could not map json to SetBewertungRequest")
+		ginCtx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	filmkritikenId := ginCtx.Param("filmkritikenId")
+	if filmkritikenId == "" {
+		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
+		ginCtx.Writer.WriteString("Film muss angegeben werden")
+		return
+	}
+
+	usernameFromUrl := ginCtx.Param("username")
+	requestContext := ginCtx.Request.Context()
+
+	username := requestContext.Value(filmkritiken.Context_Username).(string)
+
+	if usernameFromUrl != username {
+		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
+		ginCtx.Writer.WriteString("Benutzer muss mit eingeloggtem Benutzer übereinstimmen")
+		return
+	}
+
+	err = h.filmkritikenService.SetKritik(requestContext, req.FilmkritikenId, username, req.Wertung)
+
+	if err != nil {
+		if _, ok := err.(*filmkritiken.NotFoundError); ok {
+			ginCtx.Writer.WriteHeader(http.StatusNotFound)
+			ginCtx.Writer.WriteString(err.Error())
+			return
+		}
+		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
+		ginCtx.Writer.WriteString(err.Error())
+		return
+	}
+
+	ginCtx.Writer.WriteHeader(http.StatusNoContent)
 }
 
 func parseIntFromQueryParam(queryParams url.Values, paramName string) (int, error) {

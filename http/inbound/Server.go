@@ -23,7 +23,12 @@ func StartServer(filmkritikenService filmkritiken.FilmkritikenService) error {
 	api := r.Group("/api", handlers...)
 
 	api.GET("/filmkritiken", filmkritikenHandler.handleGetFilmkritiken)
-	api.POST("/film", NewAuthHandler([]string{"film.add"}), filmkritikenHandler.handleCreateFilm)
+	api.POST("/filme",
+		NewAuthHandler([]string{"film.add"}),
+		filmkritikenHandler.handleCreateFilm)
+	api.PUT("/filmkritiken/:filmkritikenId/bewertungen/:username",
+		NewAuthHandler([]string{"bewertung.add"}),
+		filmkritikenHandler.handleSetBewertung)
 	err := r.Run()
 
 	if err != nil {

@@ -46,14 +46,29 @@ func (repo *mongoDbRepository) init(ctx context.Context, config *MongoDbConfig) 
 	return nil
 }
 
+func (repo *mongoDbRepository) FindFilmkritiken(ctx context.Context, filmkritikenId string) (*filmkritiken.Filmkritiken, error) {
+	mongoFilter := bson.M{"_id": bson.M{"$eq": filmkritikenId}}
+	result := &filmkritiken.Filmkritiken{}
+
+	err := repo.database.Collection(filmkritikenCollectionName).FindOne(ctx, mongoFilter).Decode(result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, filmkritiken.NewNotFoundErrorFromString("Filmkritiken / Film konnte nicht gefunden werden.")
+		}
+
+		return nil, err
+	}
+
+	return result, nil
+}
+
 func (repo *mongoDbRepository) GetFilmkritiken(ctx context.Context, filter *filmkritiken.FilmkritikenFilter) ([]*filmkritiken.Filmkritiken, error) {
 	mongoFilter := bson.D{}
-	// filter.
+
 	findOptions := options.Find().
 		SetSort(bson.D{{"details.besprochenam", -1}}).
 		SetLimit(int64(filter.Limit)).
 		SetSkip(int64(filter.Offset))
-
 	cursor, err := repo.database.Collection(filmkritikenCollectionName).Find(ctx, mongoFilter, findOptions)
 	if err != nil {
 		return nil, err
