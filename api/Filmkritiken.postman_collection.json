@@ -6,6 +6,34 @@
 	},
 	"item": [
 		{
+			"name": "Filmkritiken",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/filmkritiken?limit=50&offset=0",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"filmkritiken"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "50"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Add Film",
 			"request": {
 				"method": "POST",
@@ -13,12 +41,13 @@
 					{
 						"key": "Authorization",
 						"value": "Bearer {{token}}",
-						"type": "text"
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"film\": {\r\n        \"titel\": \"Pulp Fiction\"\r\n    },\r\n    \"von\": \"Stefan\",\r\n    \"besprochenam\": \"2021-05-18T12:00:00Z\"\r\n}",
+					"raw": "{\r\n    \"von\": \"Flo\",\r\n    \"besprochenam\": \"2021-02-20T12:00:00Z\",\r\n    \"film\": {\r\n        \"titel\": \"Gangs of New York\",\r\n        \"image\": {\r\n            \"source\": \"GangsOfNewYork.jpg\",\r\n            \"copyright\": \"IMDb\"\r\n        },\r\n        \"altersfreigabe\": 16,\r\n        \"erscheinungsjahr\": 2002,\r\n        \"regie\": \"Martin Scorsese\",\r\n        \"laenge\": 160,\r\n        \"originalsprache\": \"Englisch\",\r\n        \"produktionsland\": \"Vereinigte Staaten, Italien\"\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -39,27 +68,45 @@
 			"response": []
 		},
 		{
-			"name": "Filmkritiken",
+			"name": "Add Wertung",
 			"request": {
-				"method": "GET",
-				"header": [],
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"filmkritikenId\": \"60aa6cc52231a19ec2085ad7\",\r\n    \"wertung\": 9\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "{{baseUrl}}/api/filmkritiken?limit=10&offset=0",
+					"raw": "{{baseUrl}}/api/filmkritiken/:filmkritikenId/bewertungen/:user",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
-						"filmkritiken"
+						"filmkritiken",
+						":filmkritikenId",
+						"bewertungen",
+						":user"
 					],
-					"query": [
+					"variable": [
 						{
-							"key": "limit",
-							"value": "10"
+							"key": "filmkritikenId",
+							"value": "60aa6cc52231a19ec2085ad7"
 						},
 						{
-							"key": "offset",
-							"value": "0"
+							"key": "user",
+							"value": "Stefan"
 						}
 					]
 				}

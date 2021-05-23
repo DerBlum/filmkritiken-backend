@@ -15,7 +15,8 @@ func StartServer(filmkritikenService filmkritiken.FilmkritikenService) error {
 
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://filmkritiken-frontend.marsrover.418-teapot.de"},
+		//AllowOrigins:     []string{"https://filmkritiken-frontend.marsrover.418-teapot.de"},
+		AllowOrigins:     []string{"https://filmkritiken-frontend.marsrover.418-teapot.de", "http://localhost:4200"},
 		AllowMethods:     []string{"GET", "POST"},
 		AllowHeaders:     []string{"Content-Length", "Accept-Encoding", "Authorization", "origin", "Cache-Control"},
 		AllowCredentials: true,
