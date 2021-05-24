@@ -45,7 +45,7 @@ paths:
     put:
       description: Create Film
       tags:
-        - Film
+        - Filme
       security:
         - bearerAuth: [film.add]
       requestBody:
