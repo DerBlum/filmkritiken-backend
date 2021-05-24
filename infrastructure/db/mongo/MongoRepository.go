@@ -53,7 +53,7 @@ func (repo *mongoDbRepository) FindFilmkritiken(ctx context.Context, filmkritike
 	err := repo.database.Collection(filmkritikenCollectionName).FindOne(ctx, mongoFilter).Decode(result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, filmkritiken.NewNotFoundErrorFromString("Filmkritiken / Film konnte nicht gefunden werden.")
+			return nil, filmkritiken.NewNotFoundErrorFromString("Filmkritiken konnten nicht gefunden werden.")
 		}
 
 		return nil, err

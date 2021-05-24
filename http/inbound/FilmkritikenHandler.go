@@ -30,8 +30,8 @@ type (
 	}
 
 	BenutzerBewertung struct {
-		Bewertung int    `json:"bewertung"`
-		Benutzer  string `json:"benutzer"`
+		Wertung  int    `json:"wertung"`
+		Benutzer string `json:"benutzer"`
 	}
 
 	filmkritikenHandler struct {
@@ -46,7 +46,6 @@ func NewFilmkritikenHandler(filmkritikenService filmkritiken.FilmkritikenService
 }
 
 func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
-
 	limit := 10
 	offset := 0
 
@@ -73,35 +72,33 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, result)
-
 }
 
 func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
-
 	req := &FilmRequest{}
 	err := ginCtx.ShouldBindJSON(req)
 	if err != nil {
-		log.Error("Could not map json to FilmRequest")
+		log.Error("could not map json to FilmRequest")
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
 	result, err := h.filmkritikenService.CreateFilm(ginCtx.Request.Context(), req.Film, req.Von, req.BesprochenAm)
 	if err != nil {
+		log.Errorf("could not create film: %v", err)
 		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
 		ginCtx.Writer.WriteString(err.Error())
 		return
 	}
 
-	ginCtx.JSON(http.StatusOK, result)
+	ginCtx.JSON(http.StatusCreated, result)
 }
 
 func (h *filmkritikenHandler) handleSetBewertung(ginCtx *gin.Context) {
-
 	req := &SetBewertungRequest{}
 	err := ginCtx.ShouldBindJSON(req)
 	if err != nil {
-		log.Error("Could not map json to SetBewertungRequest")
+		log.Error("could not map json to SetBewertungRequest")
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
@@ -119,6 +116,7 @@ func (h *filmkritikenHandler) handleSetBewertung(ginCtx *gin.Context) {
 	username := requestContext.Value(filmkritiken.Context_Username).(string)
 
 	if usernameFromUrl != username {
+		log.Warnf("users in URL (%s) and token (%s) do not match", usernameFromUrl, username)
 		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
 		ginCtx.Writer.WriteString("Benutzer muss mit eingeloggtem Benutzer übereinstimmen")
 		return
@@ -127,11 +125,18 @@ func (h *filmkritikenHandler) handleSetBewertung(ginCtx *gin.Context) {
 	err = h.filmkritikenService.SetKritik(requestContext, req.FilmkritikenId, username, req.Wertung)
 
 	if err != nil {
+		if _, ok := err.(*filmkritiken.InvalidInputError); ok {
+			ginCtx.Writer.WriteHeader(http.StatusBadRequest)
+			ginCtx.Writer.WriteString(err.Error())
+			return
+		}
 		if _, ok := err.(*filmkritiken.NotFoundError); ok {
+			log.Warnf("could not find filmkritiken (%s): %v", req.FilmkritikenId, err)
 			ginCtx.Writer.WriteHeader(http.StatusNotFound)
 			ginCtx.Writer.WriteString(err.Error())
 			return
 		}
+		log.Errorf("could not set bewertung: %v", err)
 		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
 		ginCtx.Writer.WriteString(err.Error())
 		return

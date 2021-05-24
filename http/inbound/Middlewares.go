@@ -59,16 +59,19 @@ func authHandler(ginCtx *gin.Context, allowedRoles []string) {
 
 	token, err := jwt.Parse(tokenString, getKey)
 	if err != nil {
+		log.Errorf("could not parse jwt token: %v", err)
 		ginCtx.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 
 	if !token.Valid {
+		log.Warnf("client tried accessing endpoint with invalid token: %v", allowedRoles, err)
 		ginCtx.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 
 	if !hasRole(allowedRoles, token) {
+		log.Warnf("client tried accessing endpoint without roles (%s): %v", allowedRoles, err)
 		ginCtx.AbortWithStatus(http.StatusForbidden)
 		return
 	}
@@ -101,7 +104,7 @@ func getKey(token *jwt.Token) (interface{}, error) {
 		var rawKey interface{}
 		err := key.Raw(&rawKey)
 		if err != nil {
-			log.Warnf("error getting raw key id from jwkSet: %v", err)
+			return nil, fmt.Errorf("error getting raw key id from jwkSet: %w", err)
 		}
 
 		return rawKey, nil

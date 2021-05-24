@@ -39,14 +39,94 @@ paths:
                 items:
                   $ref: "#/components/schemas/Filmkritiken"
         "500":
-          description: Internal Error
+          $ref: "#/components/responses/InternalError"
+
+  /api/filme:
+    put:
+      description: Create Film
+      tags:
+        - Film
+      security:
+        - bearerAuth: [film.add]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FilmRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Filmkritiken"
+        "400":
+          description: Bad Request
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /api/filmkritiken/{filmkritikenId}/bewertungen/{username}:
+    post:
+      description: Add single Bewertung for Filmkritiken
+      tags:
+        - Bewertungen
+      security:
+        - bearerAuth: [bewertung.add]
+      parameters:
+        - in: path
+          name: filmkritikenId
+          required: true
+          schema:
+            type: string
+            description: ID der Filmkritiken.
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            description: Benutzer, für den die Wertung gilt.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetBewertungRequest"
+      responses:
+        "204":
+          description: Success
+        "400":
+          description: Request data is invalid
           content:
             text/plain:
               schema:
                 type: string
-                example: Could not get Filmkritiken from DB
+                example: Wertung muss zwischen 1 und 10 liegen.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          description: Filmkritiken could not be found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Filmkritiken konnten nicht gefunden werden.
+        "500":
+          $ref: "#/components/responses/InternalError"
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     Filmkritiken:
       type: object
@@ -105,6 +185,7 @@ components:
       properties:
         von:
           type: string
+          description: Nutzername des Bewertenden
           example: Stefan
         wertung:
           type: integer
@@ -137,7 +218,65 @@ components:
           example: Stefan
         besprochenam:
           type: string
-          description: Datum nach ISO 8601 / EN 28601, an dem der Film besprochen wurde.
+          description: Datum nach ISO 8601 / EN 28601, an dem der Film besprochen wird / wurde.
           example: "2021-04-24"
       required:
         - beitragvon
+    FilmRequest:
+      type: object
+      properties:
+        film:
+          $ref: "#/components/schemas/Film"
+        von:
+          type: string
+          description: Der Benutzer, der den Film vorgeschlagen hat.
+          example: Stefan
+        besprochenam:
+          type: string
+          description: Datum nach ISO 8601 / EN 28601, an dem der Film besprochen wird / wurde.
+      required:
+        - film
+        - von
+        - besprochenam
+    SetBewertungRequest:
+      type: object
+      properties:
+        filmkritikenId:
+          type: string
+          description: ID der Filmkritiken.
+        wertung:
+          type: integer
+          minimum: 1
+          maximum: 10
+    SetBewertungBulkRequest:
+      type: object
+      properties:
+        filmkritikenId:
+          type: string
+          description: ID der Filmkritiken.
+        benutzerBewertungen:
+          type: array
+          items:
+            $ref: "#/components/schemas/BenutzerBewertung"
+    BenutzerBewertung:
+      type: object
+      properties:
+        wertung:
+          type: integer
+          minimum: 1
+          maximum: 10
+        benutzer:
+          type: string
+          description: Benutzer, für den die Wertung gilt.
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+    ForbiddenError:
+      description: User has no permission for API call
+    InternalError:
+      description: Internal Error
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: Could not get Filmkritiken from DB
