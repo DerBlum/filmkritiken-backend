@@ -8,6 +8,9 @@
 		{
 			"name": "Filmkritiken",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -41,8 +44,7 @@
 					{
 						"key": "Authorization",
 						"value": "Bearer {{token}}",
-						"type": "text",
-						"disabled": true
+						"type": "text"
 					}
 				],
 				"body": {
@@ -55,13 +57,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/film",
+					"raw": "{{baseUrl}}/api/filme",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
-						"film"
+						"filme"
 					]
 				}
 			},
@@ -80,7 +82,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"filmkritikenId\": \"60aa6cc52231a19ec2085ad7\",\r\n    \"wertung\": 9\r\n}",
+					"raw": "{\r\n    \"filmkritikenId\": \"60abc35e8d7d89bbf6630348\",\r\n    \"wertung\": 9\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
