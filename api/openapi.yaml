@@ -131,6 +131,8 @@ components:
     Filmkritiken:
       type: object
       properties:
+        id:
+          type: string
         details:
           $ref: "#/components/schemas/FilmkritikenDetails"
         film:
