@@ -65,7 +65,7 @@ func authHandler(ginCtx *gin.Context, allowedRoles []string) {
 	}
 
 	if !token.Valid {
-		log.Warnf("client tried accessing endpoint with invalid token: %v", allowedRoles, err)
+		log.Warnf("client tried accessing endpoint with invalid token: %v", err)
 		ginCtx.AbortWithStatus(http.StatusForbidden)
 		return
 	}
