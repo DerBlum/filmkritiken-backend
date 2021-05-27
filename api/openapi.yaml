@@ -71,7 +71,7 @@ paths:
           $ref: "#/components/responses/InternalError"
 
   /api/filmkritiken/{filmkritikenId}/bewertungen/{username}:
-    post:
+    put:
       description: Add single Bewertung for Filmkritiken
       tags:
         - Bewertungen
