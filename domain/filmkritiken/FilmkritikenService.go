@@ -2,13 +2,13 @@ package filmkritiken
 
 import (
 	"context"
-	"time"
+	"fmt"
 )
 
 type (
 	FilmkritikenService interface {
 		GetFilmkritiken(ctx context.Context, filter *FilmkritikenFilter) ([]*Filmkritiken, error)
-		CreateFilm(ctx context.Context, film *Film, von string, besprochenam *time.Time) (*Filmkritiken, error)
+		CreateFilm(ctx context.Context, film *Film, filmkritikenDetails *FilmkritikenDetails) (*Filmkritiken, error)
 		SetKritik(ctx context.Context, filmkritikenId string, von string, bewertung int) error
 	}
 
@@ -38,13 +38,10 @@ func (f *filmkritikenServiceImpl) GetFilmkritiken(ctx context.Context, filter *F
 	return filmkritiken, nil
 }
 
-func (f *filmkritikenServiceImpl) CreateFilm(ctx context.Context, film *Film, von string, besprochenam *time.Time) (*Filmkritiken, error) {
+func (f *filmkritikenServiceImpl) CreateFilm(ctx context.Context, film *Film, filmkritikenDetails *FilmkritikenDetails) (*Filmkritiken, error) {
 	filmkritiken := &Filmkritiken{
-		Film: film,
-		Details: &FilmkritikenDetails{
-			BeitragVon:   von,
-			BesprochenAm: besprochenam,
-		},
+		Film:        film,
+		Details:     filmkritikenDetails,
 		Bewertungen: make([]*Bewertung, 0),
 	}
 
@@ -66,6 +63,10 @@ func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId 
 	filmkritiken, err := f.filmkritikenRepository.FindFilmkritiken(ctx, filmkritikenId)
 	if err != nil {
 		return err
+	}
+
+	if !filmkritiken.Details.BewertungOffen {
+		return NewInvalidInputErrorFromString(fmt.Sprintf("Die Bewertung von %s ist nicht mehr möglich.", filmkritiken.Film.Titel))
 	}
 
 	found := false

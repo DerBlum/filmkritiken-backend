@@ -44,8 +44,9 @@ type (
 	}
 
 	FilmkritikenDetails struct {
-		BeitragVon   string     `json:"beitragvon"`
-		BesprochenAm *time.Time `json:"besprochenam"`
+		BeitragVon     string     `json:"beitragvon"`
+		BesprochenAm   *time.Time `json:"besprochenam"`
+		BewertungOffen bool       `json:"bewertungoffen"`
 	}
 
 	FilmkritikenFilter struct {

@@ -222,6 +222,10 @@ components:
           type: string
           description: Datum nach ISO 8601 / EN 28601, an dem der Film besprochen wird / wurde.
           example: "2021-04-24"
+        bewertungoffen:
+          type: boolean
+          description: True, wenn noch Bewertungen abgegeben werden können.
+          default: false
       required:
         - beitragvon
     FilmRequest:
@@ -236,6 +240,10 @@ components:
         besprochenam:
           type: string
           description: Datum nach ISO 8601 / EN 28601, an dem der Film besprochen wird / wurde.
+        bewertungoffen:
+          type: boolean
+          description: True, wenn noch Bewertungen abgegeben werden können.
+          default: true
       required:
         - film
         - von

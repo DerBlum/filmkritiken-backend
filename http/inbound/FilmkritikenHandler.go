@@ -14,9 +14,10 @@ import (
 
 type (
 	FilmRequest struct {
-		Film         *filmkritiken.Film `json:"film"`
-		Von          string             `json:"von"`
-		BesprochenAm *time.Time         `json:"besprochenam"`
+		Film           *filmkritiken.Film `json:"film"`
+		Von            string             `json:"von"`
+		BesprochenAm   *time.Time         `json:"besprochenam"`
+		BewertungOffen bool               `json:"bewertungoffen"`
 	}
 
 	SetBewertungRequest struct {
@@ -83,7 +84,12 @@ func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
 		return
 	}
 
-	result, err := h.filmkritikenService.CreateFilm(ginCtx.Request.Context(), req.Film, req.Von, req.BesprochenAm)
+	filmkritikenDetails := &filmkritiken.FilmkritikenDetails{
+		BeitragVon:     req.Von,
+		BesprochenAm:   req.BesprochenAm,
+		BewertungOffen: req.BewertungOffen,
+	}
+	result, err := h.filmkritikenService.CreateFilm(ginCtx.Request.Context(), req.Film, filmkritikenDetails)
 	if err != nil {
 		log.Errorf("could not create film: %v", err)
 		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
