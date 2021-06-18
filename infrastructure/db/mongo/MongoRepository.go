@@ -2,7 +2,6 @@ package mongo
 
 import (
 	"context"
-
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -12,7 +11,13 @@ import (
 
 const (
 	filmkritikenCollectionName = "filmkritiken"
+	imagesCollectionName       = "images"
 )
+
+type image struct {
+	ImageId string `bson:"_id"`
+	Image   *[]byte
+}
 
 var updateOpts = options.Update().SetUpsert(true)
 
@@ -73,14 +78,61 @@ func (repo *mongoDbRepository) GetFilmkritiken(ctx context.Context, filter *film
 	if err != nil {
 		return nil, err
 	}
-	filmkritiken := make([]*filmkritiken.Filmkritiken, 0)
+	results := make([]*filmkritiken.Filmkritiken, 0)
 
-	err = cursor.All(ctx, &filmkritiken)
+	err = cursor.All(ctx, &results)
 	if err != nil {
 		return nil, err
 	}
 
-	return filmkritiken, nil
+	return results, nil
+}
+
+func (repo *mongoDbRepository) SaveImage(ctx context.Context, imageBites *[]byte) (string, error) {
+	id := primitive.NewObjectID().Hex()
+
+	image := &image{
+		ImageId: id,
+		Image:   imageBites,
+	}
+
+	filter := bson.M{"_id": bson.M{"$eq": image.ImageId}}
+	update := bson.D{primitive.E{Key: "$set", Value: image}}
+	_, err := repo.database.Collection(imagesCollectionName).UpdateOne(ctx, filter, update, updateOpts)
+
+	if err != nil {
+		return "", err
+	}
+
+	return id, nil
+}
+
+func (repo *mongoDbRepository) FindImage(ctx context.Context, imageId string) (*[]byte, error) {
+	mongoFilter := bson.M{"_id": bson.M{"$eq": imageId}}
+	result := &image{}
+
+	err := repo.database.Collection(imagesCollectionName).FindOne(ctx, mongoFilter).Decode(result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, filmkritiken.NewNotFoundErrorFromString("Bild konnte nicht gefunden werden.")
+		}
+
+		return nil, err
+	}
+
+	return result.Image, nil
+}
+
+func (repo *mongoDbRepository) DeleteImage(ctx context.Context, imageId string) error {
+
+	filter := bson.M{"_id": bson.M{"$eq": imageId}}
+	_, err := repo.database.Collection(imagesCollectionName).DeleteOne(ctx, filter)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (repo *mongoDbRepository) SaveFilmkritiken(ctx context.Context, filmkritiken *filmkritiken.Filmkritiken) error {

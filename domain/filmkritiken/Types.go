@@ -41,6 +41,7 @@ type (
 	Image struct {
 		Source    string `json:"source"`
 		Copyright string `json:"copyright"`
+		Id        string `json:"id"`
 	}
 
 	FilmkritikenDetails struct {

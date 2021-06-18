@@ -32,7 +32,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	filmkritikenService := filmkritiken.NewFilmkritikenService(mongoDbRepository)
+	filmkritikenService := filmkritiken.NewFilmkritikenService(mongoDbRepository, mongoDbRepository)
 
 	httpInbound.StartServer(&serverConfig, filmkritikenService)
 

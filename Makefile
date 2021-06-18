@@ -2,7 +2,6 @@ build:
 	go build -v ./cmd/backend/main.go
 test:
 	go test -v ./...
-
 run:
 	bash -c "set -a; source ./config/local.env; set +a && go run cmd/backend/main.go"
 run-docker:

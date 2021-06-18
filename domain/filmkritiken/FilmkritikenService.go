@@ -8,8 +8,9 @@ import (
 type (
 	FilmkritikenService interface {
 		GetFilmkritiken(ctx context.Context, filter *FilmkritikenFilter) ([]*Filmkritiken, error)
-		CreateFilm(ctx context.Context, film *Film, filmkritikenDetails *FilmkritikenDetails) (*Filmkritiken, error)
+		CreateFilm(ctx context.Context, film *Film, filmkritikenDetails *FilmkritikenDetails, imageBites *[]byte) (*Filmkritiken, error)
 		SetKritik(ctx context.Context, filmkritikenId string, von string, bewertung int) error
+		LoadImage(ctx context.Context, imageId string) (*[]byte, error)
 	}
 
 	FilmkritikenRepository interface {
@@ -18,14 +19,22 @@ type (
 		SaveFilmkritiken(ctx context.Context, filmkritiken *Filmkritiken) error
 	}
 
+	ImageRepository interface {
+		FindImage(ctx context.Context, imageId string) (*[]byte, error)
+		SaveImage(ctx context.Context, imageBites *[]byte) (string, error)
+		DeleteImage(ctx context.Context, id string) error
+	}
+
 	filmkritikenServiceImpl struct {
 		filmkritikenRepository FilmkritikenRepository
+		imageRepository        ImageRepository
 	}
 )
 
-func NewFilmkritikenService(filmkritikenRepository FilmkritikenRepository) FilmkritikenService {
+func NewFilmkritikenService(filmkritikenRepository FilmkritikenRepository, imageRepository ImageRepository) FilmkritikenService {
 	return &filmkritikenServiceImpl{
 		filmkritikenRepository: filmkritikenRepository,
+		imageRepository:        imageRepository,
 	}
 }
 
@@ -38,15 +47,23 @@ func (f *filmkritikenServiceImpl) GetFilmkritiken(ctx context.Context, filter *F
 	return filmkritiken, nil
 }
 
-func (f *filmkritikenServiceImpl) CreateFilm(ctx context.Context, film *Film, filmkritikenDetails *FilmkritikenDetails) (*Filmkritiken, error) {
+func (f *filmkritikenServiceImpl) CreateFilm(ctx context.Context, film *Film, filmkritikenDetails *FilmkritikenDetails, imageBites *[]byte) (*Filmkritiken, error) {
 	filmkritiken := &Filmkritiken{
 		Film:        film,
 		Details:     filmkritikenDetails,
 		Bewertungen: make([]*Bewertung, 0),
 	}
 
-	err := f.filmkritikenRepository.SaveFilmkritiken(ctx, filmkritiken)
+	imageId, err := f.imageRepository.SaveImage(ctx, imageBites)
 	if err != nil {
+		// TODO: Anderer Error String?
+		return nil, NewRepositoryError(err)
+	}
+	film.Image.Id = imageId
+
+	err = f.filmkritikenRepository.SaveFilmkritiken(ctx, filmkritiken)
+	if err != nil {
+		f.imageRepository.DeleteImage(ctx, imageId)
 		// TODO: Anderer Error String?
 		return nil, NewRepositoryError(err)
 	}
@@ -78,11 +95,13 @@ func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId 
 		}
 	}
 	if !found {
-		filmkritiken.Bewertungen = append(filmkritiken.Bewertungen, &Bewertung{
-			Von:        von,
-			Wertung:    wertung,
-			Enthaltung: false,
-		})
+		filmkritiken.Bewertungen = append(
+			filmkritiken.Bewertungen, &Bewertung{
+				Von:        von,
+				Wertung:    wertung,
+				Enthaltung: false,
+			},
+		)
 	}
 
 	err = f.filmkritikenRepository.SaveFilmkritiken(ctx, filmkritiken)
@@ -92,4 +111,13 @@ func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId 
 	}
 
 	return nil
+}
+
+func (f *filmkritikenServiceImpl) LoadImage(ctx context.Context, imageId string) (*[]byte, error) {
+	imageBites, err := f.imageRepository.FindImage(ctx, imageId)
+	if err != nil {
+		return nil, err
+	}
+
+	return imageBites, nil
 }

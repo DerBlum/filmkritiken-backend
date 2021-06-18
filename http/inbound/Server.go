@@ -18,21 +18,31 @@ func StartServer(serverConfig *ServerConfig, filmkritikenService filmkritiken.Fi
 	}
 
 	r := gin.Default()
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     serverConfig.CorsAllowOrigins,
-		AllowMethods:     []string{"GET", "POST", "PUT"},
-		AllowHeaders:     []string{"content-type", "Content-Length", "Accept-Encoding", "Authorization", "origin", "Cache-Control"},
-		AllowCredentials: true,
-	}))
+	r.MaxMultipartMemory = 8 << 20 // max 8 MB file size
+	r.Use(
+		cors.New(
+			cors.Config{
+				AllowOrigins:     serverConfig.CorsAllowOrigins,
+				AllowMethods:     []string{"GET", "POST", "PUT"},
+				AllowHeaders:     []string{"content-type", "Content-Length", "Accept-Encoding", "Authorization", "origin", "Cache-Control"},
+				AllowCredentials: true,
+			},
+		),
+	)
 	api := r.Group("/api", handlers...)
 
 	api.GET("/filmkritiken", filmkritikenHandler.handleGetFilmkritiken)
-	api.POST("/filme",
+	api.GET("/images/:imageId", filmkritikenHandler.loadImage)
+	api.POST(
+		"/filme",
 		NewAuthHandler([]string{"film.add"}),
-		filmkritikenHandler.handleCreateFilm)
-	api.PUT("/filmkritiken/:filmkritikenId/bewertungen/:username",
+		filmkritikenHandler.handleCreateFilm,
+	)
+	api.PUT(
+		"/filmkritiken/:filmkritikenId/bewertungen/:username",
 		NewAuthHandler([]string{"bewertung.add"}),
-		filmkritikenHandler.handleSetBewertung)
+		filmkritikenHandler.handleSetBewertung,
+	)
 	err := r.Run()
 
 	if err != nil {

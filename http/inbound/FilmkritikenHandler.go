@@ -1,7 +1,9 @@
 package inbound
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -11,6 +13,9 @@ import (
 	gin "github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
+
+// Have images cached for 30 days
+const imageCacheDuration = 60 * 60 * 24 * 30
 
 type (
 	FilmRequest struct {
@@ -77,9 +82,34 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 
 func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
 	req := &FilmRequest{}
-	err := ginCtx.ShouldBindJSON(req)
+	jsonContent, hasJson := ginCtx.GetPostForm("json")
+	if !hasJson {
+		log.Error("no json content in create film request")
+		ginCtx.AbortWithStatus(http.StatusBadRequest)
+	}
+
+	err := json.Unmarshal([]byte(jsonContent), &req)
 	if err != nil {
-		log.Error("could not map json to FilmRequest")
+		log.Errorf("could not map json to FilmRequest: %v", err)
+		ginCtx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	fileHeader, err := ginCtx.FormFile("file")
+	if err != nil {
+		log.Errorf("could not get uploaded file: %v", err)
+		ginCtx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	file, err := fileHeader.Open()
+	if err != nil {
+		log.Errorf("could not open uploaded file: %v", err)
+		ginCtx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	imageBites, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Errorf("could not read uploaded file: %v", err)
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
@@ -89,7 +119,7 @@ func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
 		BesprochenAm:   req.BesprochenAm,
 		BewertungOffen: req.BewertungOffen,
 	}
-	result, err := h.filmkritikenService.CreateFilm(ginCtx.Request.Context(), req.Film, filmkritikenDetails)
+	result, err := h.filmkritikenService.CreateFilm(ginCtx.Request.Context(), req.Film, filmkritikenDetails, &imageBites)
 	if err != nil {
 		log.Errorf("could not create film: %v", err)
 		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
@@ -149,6 +179,34 @@ func (h *filmkritikenHandler) handleSetBewertung(ginCtx *gin.Context) {
 	}
 
 	ginCtx.Writer.WriteHeader(http.StatusNoContent)
+}
+
+func (h *filmkritikenHandler) loadImage(ginCtx *gin.Context) {
+	imageId := ginCtx.Param("imageId")
+	if imageId == "" {
+		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
+		ginCtx.Writer.WriteString("Bild muss angegeben werden")
+		return
+	}
+
+	imageBites, err := h.filmkritikenService.LoadImage(ginCtx.Request.Context(), imageId)
+	if err != nil {
+		if _, ok := err.(*filmkritiken.NotFoundError); ok {
+			log.Warnf("could not find image (%s): %v", imageId, err)
+			ginCtx.Writer.WriteHeader(http.StatusNotFound)
+			ginCtx.Writer.WriteString(err.Error())
+			return
+		}
+		log.Errorf("could not get image: %v", err)
+		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
+		ginCtx.Writer.WriteString(err.Error())
+		return
+	}
+
+	ginCtx.Writer.Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%v, immutable", imageCacheDuration))
+	ginCtx.Writer.WriteHeader(http.StatusOK)
+	ginCtx.Writer.Write(*imageBites)
+
 }
 
 func parseIntFromQueryParam(queryParams url.Values, paramName string) (int, error) {
