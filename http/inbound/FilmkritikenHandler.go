@@ -194,7 +194,7 @@ func (h *filmkritikenHandler) loadImage(ginCtx *gin.Context) {
 		if _, ok := err.(*filmkritiken.NotFoundError); ok {
 			log.Warnf("could not find image (%s): %v", imageId, err)
 			ginCtx.Writer.WriteHeader(http.StatusNotFound)
-			ginCtx.Writer.WriteString(err.Error())
+			ginCtx.Writer.WriteString("Bild konnte nicht gefunden werden")
 			return
 		}
 		log.Errorf("could not get image: %v", err)
