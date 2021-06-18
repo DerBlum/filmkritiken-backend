@@ -42,18 +42,29 @@ paths:
           $ref: "#/components/responses/InternalError"
 
   /api/filme:
-    put:
+    post:
       description: Create Film
       tags:
         - Filme
       security:
-        - bearerAuth: [film.add]
+        - bearerAuth: [ film.add ]
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: "#/components/schemas/FilmRequest"
+              type: object
+              properties:
+                json:
+                  $ref: "#/components/schemas/FilmRequest"
+                image:
+                  type: string
+                  format: binary
+            encoding:
+              json:
+                contentType: application/json
+              image:
+                contentType: image/png, image/jpeg
       responses:
         "201":
           description: Created
@@ -117,6 +128,42 @@ paths:
               schema:
                 type: string
                 example: Filmkritiken konnten nicht gefunden werden.
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /api/images/{imageId}:
+    get:
+      description: Retrieves an image file by ID
+      tags:
+        - Bilder
+      parameters:
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Filmkritiken"
+        "400":
+          description: Request data is invalid
+          content:
+            text/plain:
+              schema:
+                type: string
+        "404":
+          description: Image could not be found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Bild konnte nicht gefunden werden.
         "500":
           $ref: "#/components/responses/InternalError"
 
@@ -203,14 +250,17 @@ components:
     Image:
       type: object
       properties:
+        id:
+          type: string
+          example: 60cc64d3d0c374b3f9984d68
         source:
           type: string
           example: JohnWick.jpg
+          deprecated: true
         copyright:
           type: string
           example: IMDb
       required:
-        - source
         - copyright
     FilmkritikenDetails:
       type: object
