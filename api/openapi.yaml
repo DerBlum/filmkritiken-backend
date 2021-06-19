@@ -47,7 +47,7 @@ paths:
       tags:
         - Filme
       security:
-        - bearerAuth: [ film.add ]
+        - bearerAuth: [film.add]
       requestBody:
         required: true
         content:
@@ -60,6 +60,9 @@ paths:
                 image:
                   type: string
                   format: binary
+              required:
+                - json
+                - image
             encoding:
               json:
                 contentType: application/json
