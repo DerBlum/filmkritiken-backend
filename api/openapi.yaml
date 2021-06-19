@@ -84,6 +84,48 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
+  /api/filmkritiken/{filmkritikenId}/bewertungenoffen/{offen}:
+    patch:
+      description: Add single Bewertung for Filmkritiken
+      tags:
+        - Bewertungen
+      security:
+        - bearerAuth: [bewertung.openclose]
+      parameters:
+        - in: path
+          name: filmkritikenId
+          required: true
+          schema:
+            type: string
+            description: ID der Filmkritiken.
+        - in: path
+          name: offen
+          required: true
+          schema:
+            type: boolean
+            description: Ob Bewertungen geöffnet sein sollen.
+
+      responses:
+        "204":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Filmkritiken"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          description: Filmkritiken could not be found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Filmkritiken konnten nicht gefunden werden.
+        "500":
+          $ref: "#/components/responses/InternalError"
+
   /api/filmkritiken/{filmkritikenId}/bewertungen/{username}:
     put:
       description: Add single Bewertung for Filmkritiken

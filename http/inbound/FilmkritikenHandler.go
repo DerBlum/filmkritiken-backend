@@ -130,6 +130,53 @@ func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
 	ginCtx.JSON(http.StatusCreated, result)
 }
 
+func (h *filmkritikenHandler) handleOpenCloseBewertungen(ginCtx *gin.Context) {
+
+	filmkritikenId := ginCtx.Param("filmkritikenId")
+	if filmkritikenId == "" {
+		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
+		ginCtx.Writer.WriteString("Film muss angegeben werden")
+		return
+	}
+
+	offenStr := ginCtx.Param("offen")
+	if offenStr == "" {
+		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
+		ginCtx.Writer.WriteString("Neuer Zustand muss angegeben werden")
+		return
+	}
+
+	if offenStr != "true" && offenStr != "false" {
+		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
+		ginCtx.Writer.WriteString("Neuer Zustand muss angegeben werden")
+		return
+	}
+
+	offen, err := strconv.ParseBool(offenStr)
+	if err != nil {
+		log.Errorf("could not open / close bewertungen: %v", err)
+		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
+		ginCtx.Writer.WriteString(err.Error())
+	}
+
+	err = h.filmkritikenService.OpenCloseBewertungen(ginCtx.Request.Context(), filmkritikenId, offen)
+
+	if err != nil {
+		if _, ok := err.(*filmkritiken.NotFoundError); ok {
+			log.Warnf("could not find filmkritiken (%s): %v", filmkritikenId, err)
+			ginCtx.Writer.WriteHeader(http.StatusNotFound)
+			ginCtx.Writer.WriteString(err.Error())
+			return
+		}
+		log.Errorf("could not open / close bewertungen: %v", err)
+		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
+		ginCtx.Writer.WriteString(err.Error())
+		return
+	}
+
+	ginCtx.Writer.WriteHeader(http.StatusNoContent)
+}
+
 func (h *filmkritikenHandler) handleSetBewertung(ginCtx *gin.Context) {
 	req := &SetBewertungRequest{}
 	err := ginCtx.ShouldBindJSON(req)

@@ -9,6 +9,7 @@ type (
 	FilmkritikenService interface {
 		GetFilmkritiken(ctx context.Context, filter *FilmkritikenFilter) ([]*Filmkritiken, error)
 		CreateFilm(ctx context.Context, film *Film, filmkritikenDetails *FilmkritikenDetails, imageBites *[]byte) (*Filmkritiken, error)
+		OpenCloseBewertungen(ctx context.Context, filmkritikenId string, offen bool) error
 		SetKritik(ctx context.Context, filmkritikenId string, von string, bewertung int) error
 		LoadImage(ctx context.Context, imageId string) (*[]byte, error)
 	}
@@ -69,6 +70,25 @@ func (f *filmkritikenServiceImpl) CreateFilm(ctx context.Context, film *Film, fi
 	}
 
 	return filmkritiken, nil
+}
+
+func (f *filmkritikenServiceImpl) OpenCloseBewertungen(ctx context.Context, filmkritikenId string, offen bool) error {
+
+	filmkritiken, err := f.filmkritikenRepository.FindFilmkritiken(ctx, filmkritikenId)
+	if err != nil {
+		return err
+	}
+
+	filmkritiken.Details.BewertungOffen = offen
+
+	f.filmkritikenRepository.SaveFilmkritiken(ctx, filmkritiken)
+	if err != nil {
+		// TODO: anderer error string?
+		return NewRepositoryError(err)
+	}
+
+	return nil
+
 }
 
 func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId string, von string, wertung int) error {

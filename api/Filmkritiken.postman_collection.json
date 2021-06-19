@@ -178,6 +178,37 @@
 			"response": []
 		},
 		{
+			"name": "Bewertung öffnen / schließen",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/filmkritiken/:filmkritikenId/bewertungenoffen/:offen",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"filmkritiken",
+						":filmkritikenId",
+						"bewertungenoffen",
+						":offen"
+					],
+					"variable": [
+						{
+							"key": "filmkritikenId",
+							"value": "60cdd824cc99fdf0c60a0f6d"
+						},
+						{
+							"key": "offen",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Add Wertung",
 			"request": {
 				"method": "PUT",
