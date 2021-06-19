@@ -23,7 +23,7 @@ func StartServer(serverConfig *ServerConfig, filmkritikenService filmkritiken.Fi
 		cors.New(
 			cors.Config{
 				AllowOrigins:     serverConfig.CorsAllowOrigins,
-				AllowMethods:     []string{"GET", "POST", "PUT"},
+				AllowMethods:     []string{"GET", "POST", "PUT", "PATCH"},
 				AllowHeaders:     []string{"content-type", "Content-Length", "Accept-Encoding", "Authorization", "origin", "Cache-Control"},
 				AllowCredentials: true,
 			},
