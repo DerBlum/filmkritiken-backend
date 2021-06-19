@@ -1,10 +1,117 @@
 {
 	"info": {
-		"_postman_id": "f0763083-cba0-48fc-8cb3-0c5160ae45e6",
+		"_postman_id": "868937ea-4317-40a9-87ba-97965834f30c",
 		"name": "Filmkritiken",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "Filme",
+			"item": [
+				{
+					"name": "Add Film - Citizen Kane",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Dani\",\n    \"besprochenam\": \"2021-06-13T12:00:00Z\",\n    \"bewertungoffen\": true,\n    \"film\": {\n        \"titel\": \"Citizen Kane\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 12,\n        \"erscheinungsjahr\": 1941,\n        \"regie\": \"Orson Welles\",\n        \"laenge\": 119,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigte Staaten\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Repositories/filmkritiken-frontend/src/assets/images/CitizenKane.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Film - Tropic Thunder",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Flo\",\n    \"besprochenam\": \"2021-06-06T12:00:00Z\",\n    \"bewertungoffen\": true,\n    \"film\": {\n        \"titel\": \"Tropic Thunder\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 16,\n        \"erscheinungsjahr\": 2008,\n        \"regie\": \"Ben Stiller\",\n        \"laenge\": 106,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigte Staaten, Vereinigtes Königreich, Deutschland\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Repositories/filmkritiken-frontend/src/assets/images/TropicThunder.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Film - Kaufhaus Cop",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Tiffy\",\n    \"besprochenam\": \"2021-06-19T12:00:00Z\",\n    \"bewertungoffen\": true,\n    \"film\": {\n        \"titel\": \"Der Kaufhaus Cop\",\n        \"image\": {\n            \"copyright\": \"Moviepilot\"\n        },\n        \"altersfreigabe\": 6,\n        \"erscheinungsjahr\": 2009,\n        \"regie\": \"Steve Carr\",\n        \"laenge\": 87,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigte Staaten\",\n        \"originaltitel\": \"Paul Blart: Mall Cop\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/MallCop.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "Filmkritiken",
 			"request": {
@@ -37,64 +144,25 @@
 			"response": []
 		},
 		{
-			"name": "Images",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/api/images/:imageId",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"api",
-						"images",
-						":imageId"
-					],
-					"variable": [
-						{
-							"key": "imageId",
-							"value": "60cc8aa0bad9a59b56f3b350"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Add Film",
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer {{token}}",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "formdata",
 					"formdata": [
 						{
 							"key": "json",
-							"value": "{\n    \"von\": \"Flo\",\n    \"besprochenam\": \"2021-02-20T12:00:00Z\",\n    \"film\": {\n        \"titel\": \"Gangs of New York\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 16,\n        \"erscheinungsjahr\": 2002,\n        \"regie\": \"Martin Scorsese\",\n        \"laenge\": 160,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigte Staaten, Italien\"\n    }\n}",
+							"value": "{\n    \"von\": \"Tiffy\",\n    \"besprochenam\": \"2021-06-19T12:00:00Z\",\n    \"bewertungoffen\": true,\n    \"film\": {\n        \"titel\": \"Der Kaufhaus Cop\",\n        \"image\": {\n            \"copyright\": \"Moviepilot\"\n        },\n        \"altersfreigabe\": 6,\n        \"erscheinungsjahr\": 2009,\n        \"regie\": \"Steve Carr\",\n        \"laenge\": 87,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigte Staaten\",\n        \"originaltitel\": \"Paul Blart: Mall Cop\"\n    }\n}",
 							"contentType": "application/json",
 							"type": "text"
 						},
 						{
 							"key": "file",
 							"type": "file",
-							"src": "/Users/sblum/Desktop/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg"
+							"src": "/C:/Users/stefa/Pictures/Filmkritiken/MallCop.jpg"
 						}
-					],
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					]
 				},
 				"url": {
 					"raw": "{{baseUrl}}/api/filme",
@@ -113,16 +181,10 @@
 			"name": "Add Wertung",
 			"request": {
 				"method": "PUT",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer {{token}}",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"filmkritikenId\": \"60abc35e8d7d89bbf6630348\",\r\n    \"wertung\": 9\r\n}",
+					"raw": "{\r\n    \"filmkritikenId\": \"60afe969c607468de1efcebf\",\r\n    \"wertung\": 9\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -154,6 +216,36 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
