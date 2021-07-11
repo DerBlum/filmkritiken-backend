@@ -109,6 +109,108 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Add Film - A Quiet Place",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Nico\",\n    \"besprochenam\": \"2021-06-26T12:00:00Z\",\n    \"bewertungoffen\": true,\n    \"film\": {\n        \"titel\": \"A Quiet Place\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 16,\n        \"erscheinungsjahr\": 2018,\n        \"regie\": \"John Krasinski\",\n        \"laenge\": 90,\n        \"originalsprache\": \"Englisch, Amerikanische Zeichensprache\",\n        \"produktionsland\": \"Vereinigte Staaten\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/AQuietPlace.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Film - Dragonball Z Kampf der Götter",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Nico\",\n    \"besprochenam\": \"2021-06-26T12:00:00Z\",\n    \"bewertungoffen\": true,\n    \"film\": {\n        \"titel\": \"A Quiet Place\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 16,\n        \"erscheinungsjahr\": 2018,\n        \"regie\": \"John Krasinski\",\n        \"laenge\": 90,\n        \"originalsprache\": \"Englisch, Amerikanische Zeichensprache\",\n        \"produktionsland\": \"Vereinigte Staaten\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/AQuietPlace.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Film - Schindlers Liste",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Flo\",\n    \"besprochenam\": \"2021-07-19T12:00:00Z\",\n    \"bewertungoffen\": false,\n    \"film\": {\n        \"titel\": \"Schindlers Liste\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 12,\n        \"erscheinungsjahr\": 1993,\n        \"regie\": \"Steven Spielberg\",\n        \"laenge\": 195,\n        \"originalsprache\": \"Englisch, Deutsch, Polnisch, Hebräisch\",\n        \"produktionsland\": \"Vereinigte Staaten\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/SchindlersListe.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -153,14 +255,14 @@
 					"formdata": [
 						{
 							"key": "json",
-							"value": "{\n    \"von\": \"Tiffy\",\n    \"besprochenam\": \"2021-06-19T12:00:00Z\",\n    \"bewertungoffen\": true,\n    \"film\": {\n        \"titel\": \"Der Kaufhaus Cop\",\n        \"image\": {\n            \"copyright\": \"Moviepilot\"\n        },\n        \"altersfreigabe\": 6,\n        \"erscheinungsjahr\": 2009,\n        \"regie\": \"Steve Carr\",\n        \"laenge\": 87,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigte Staaten\",\n        \"originaltitel\": \"Paul Blart: Mall Cop\"\n    }\n}",
+							"value": "{\n    \"von\": \"Flo\",\n    \"besprochenam\": \"2021-07-19T12:00:00Z\",\n    \"bewertungoffen\": false,\n    \"film\": {\n        \"titel\": \"Schindlers Liste\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 12,\n        \"erscheinungsjahr\": 1993,\n        \"regie\": \"Steven Spielberg\",\n        \"laenge\": 195,\n        \"originalsprache\": \"Englisch, Deutsch, Polnisch, Hebräisch\",\n        \"produktionsland\": \"Vereinigte Staaten\"\n    }\n}",
 							"contentType": "application/json",
 							"type": "text"
 						},
 						{
 							"key": "file",
 							"type": "file",
-							"src": "/C:/Users/stefa/Pictures/Filmkritiken/MallCop.jpg"
+							"src": "/C:/Users/stefa/Pictures/Filmkritiken/SchindlersListe.jpg"
 						}
 					]
 				},
