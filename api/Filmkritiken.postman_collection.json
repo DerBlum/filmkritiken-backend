@@ -211,6 +211,74 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Add Film - Taxi Driver",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Dani\",\n    \"besprochenam\": \"2021-07-24T12:00:00Z\",\n    \"bewertungoffen\": false,\n    \"film\": {\n        \"titel\": \"Taxi Driver\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 16,\n        \"erscheinungsjahr\": 1976,\n        \"regie\": \"Martin Scorsese\",\n        \"laenge\": 114,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigte Staaten\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/TaxiDriver.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Film - Guns Akimbo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Tiffy\",\n    \"besprochenam\": \"2021-08-15T12:00:00Z\",\n    \"bewertungoffen\": false,\n    \"film\": {\n        \"titel\": \"Guns Akimbo\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 16,\n        \"erscheinungsjahr\": 2019,\n        \"regie\": \"Jason Lei Howden\",\n        \"laenge\": 97,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Neuseeland, Vereinigtes Königreich, Deutschland\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/GunsAkimbo.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -255,14 +323,14 @@
 					"formdata": [
 						{
 							"key": "json",
-							"value": "{\n    \"von\": \"Flo\",\n    \"besprochenam\": \"2021-07-19T12:00:00Z\",\n    \"bewertungoffen\": false,\n    \"film\": {\n        \"titel\": \"Schindlers Liste\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 12,\n        \"erscheinungsjahr\": 1993,\n        \"regie\": \"Steven Spielberg\",\n        \"laenge\": 195,\n        \"originalsprache\": \"Englisch, Deutsch, Polnisch, Hebräisch\",\n        \"produktionsland\": \"Vereinigte Staaten\"\n    }\n}",
+							"value": "{\n    \"von\": \"Tiffy\",\n    \"besprochenam\": \"2021-08-15T12:00:00Z\",\n    \"bewertungoffen\": false,\n    \"film\": {\n        \"titel\": \"Guns Akimbo\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 16,\n        \"erscheinungsjahr\": 2019,\n        \"regie\": \"Jason Lei Howden\",\n        \"laenge\": 97,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Neuseeland, Vereinigtes Königreich, Deutschland\"\n    }\n}",
 							"contentType": "application/json",
 							"type": "text"
 						},
 						{
 							"key": "file",
 							"type": "file",
-							"src": "/C:/Users/stefa/Pictures/Filmkritiken/SchindlersListe.jpg"
+							"src": "/C:/Users/stefa/Pictures/Filmkritiken/GunsAkimbo.jpg"
 						}
 					]
 				},
