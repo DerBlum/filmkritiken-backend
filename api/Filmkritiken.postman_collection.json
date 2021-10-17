@@ -279,6 +279,210 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Add Film - Alien",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Nico\",\n    \"besprochenam\": \"2021-08-21T12:00:00Z\",\n    \"bewertungoffen\": false,\n    \"film\": {\n        \"titel\": \"Alien – Das unheimliche Wesen aus einer fremden Welt\",\n\t\t\"originaltitel\": \"Alien\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 16,\n        \"erscheinungsjahr\": 1979,\n        \"regie\": \"Ridley Scott\",\n        \"laenge\": 117,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigtes Königreich, Vereinigte Staaten\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/Alien.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Film - Karate Kid",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Stefan\",\n    \"besprochenam\": \"2021-08-28T12:00:00Z\",\n    \"bewertungoffen\": false,\n    \"film\": {\n        \"titel\": \"Karate Kid\",\n\t\t\"originaltitel\": \"The Karate Kid\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 12,\n        \"erscheinungsjahr\": 1984,\n        \"regie\": \"John G. Avildsen\",\n        \"laenge\": 126,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigte Staaten\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/KarateKid.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Film - Zombiber",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Flo\",\n    \"besprochenam\": \"2021-09-19T12:00:00Z\",\n    \"bewertungoffen\": true,\n    \"film\": {\n        \"titel\": \"Zombiber\",\n\t\t\"originaltitel\": \"Zombeavers\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 16,\n        \"erscheinungsjahr\": 2014,\n        \"regie\": \"Jordan Rubin\",\n        \"laenge\": 77,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigte Staaten\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/Zombiber.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Film - Für eine Handvoll Dollar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Dani\",\n    \"besprochenam\": \"2021-10-02T12:00:00Z\",\n    \"bewertungoffen\": true,\n    \"film\": {\n        \"titel\": \"Für eine Handvoll Dollar\",\n\t\t\"originaltitel\": \"Per un pugno di dollari\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 16,\n        \"erscheinungsjahr\": 1964,\n        \"regie\": \"Sergio Leone\",\n        \"laenge\": 100,\n        \"originalsprache\": \"Italienisch, Englisch, Spanisch\",\n        \"produktionsland\": \"Italien, Spanien, Deutschland\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/FistfulOfDollars.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Film - Per Anhalter durch die Galaxis",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Tiffy\",\n    \"besprochenam\": \"2021-10-17T12:00:00Z\",\n    \"bewertungoffen\": true,\n    \"film\": {\n        \"titel\": \"Per Anhalter durch die Galaxis\",\n\t\t\"originaltitel\": \"The Hitchhiker’s Guide to the Galaxy\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 6,\n        \"erscheinungsjahr\": 2005,\n        \"regie\": \"Garth Jennings\",\n        \"laenge\": 110,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigtes Königreich\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/PerAnhalter.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Film - Alien vs. Predator 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "json",
+									"value": "{\n    \"von\": \"Nico\",\n    \"besprochenam\": \"2021-10-31T12:00:00Z\",\n    \"bewertungoffen\": false,\n    \"film\": {\n        \"titel\": \"Alien vs. Predator 2\",\n\t\t\"originaltitel\": \"Aliens vs. Predator: Requiem\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 18,\n        \"erscheinungsjahr\": 2007,\n        \"regie\": \"Colin Strause, Greg Strause\",\n        \"laenge\": 90,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigte Staaten, Kanada\"\n    }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/stefa/Pictures/Filmkritiken/AlienVsPredator2.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/filme",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"filme"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -323,14 +527,14 @@
 					"formdata": [
 						{
 							"key": "json",
-							"value": "{\n    \"von\": \"Tiffy\",\n    \"besprochenam\": \"2021-08-15T12:00:00Z\",\n    \"bewertungoffen\": false,\n    \"film\": {\n        \"titel\": \"Guns Akimbo\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 16,\n        \"erscheinungsjahr\": 2019,\n        \"regie\": \"Jason Lei Howden\",\n        \"laenge\": 97,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Neuseeland, Vereinigtes Königreich, Deutschland\"\n    }\n}",
+							"value": "{\n    \"von\": \"Nico\",\n    \"besprochenam\": \"2021-10-31T12:00:00Z\",\n    \"bewertungoffen\": false,\n    \"film\": {\n        \"titel\": \"Alien vs. Predator 2\",\n\t\t\"originaltitel\": \"Aliens vs. Predator: Requiem\",\n        \"image\": {\n            \"copyright\": \"IMDb\"\n        },\n        \"altersfreigabe\": 18,\n        \"erscheinungsjahr\": 2007,\n        \"regie\": \"Colin Strause, Greg Strause\",\n        \"laenge\": 90,\n        \"originalsprache\": \"Englisch\",\n        \"produktionsland\": \"Vereinigte Staaten, Kanada\"\n    }\n}",
 							"contentType": "application/json",
 							"type": "text"
 						},
 						{
 							"key": "file",
 							"type": "file",
-							"src": "/C:/Users/stefa/Pictures/Filmkritiken/GunsAkimbo.jpg"
+							"src": "/C:/Users/stefa/Pictures/Filmkritiken/AlienVsPredator2.jpg"
 						}
 					]
 				},
