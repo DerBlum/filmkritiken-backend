@@ -27,12 +27,12 @@ jobs:
 
     - name: Build an image from Dockerfile
       run: |
-        docker build -t DerBlum/filmkritiken-backend:${{ github.sha }} .
+        docker build -t derblum/filmkritiken-backend:${{ github.sha }} .
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'DerBlum/filmkritiken-backend:${{ github.sha }}'
+        image-ref: 'derblum/filmkritiken-backend:${{ github.sha }}'
         format: 'sarif'
         output: 'trivy-results.sarif'
 
