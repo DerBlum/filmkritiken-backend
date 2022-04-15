@@ -8,7 +8,7 @@ COPY . .
 RUN make build
 RUN make test
 
-FROM alpine:3.13.5
+FROM alpine:latest
 
 ENTRYPOINT ./main
 COPY --from=build /go/src/app/main .
