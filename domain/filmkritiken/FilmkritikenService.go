@@ -64,7 +64,7 @@ func (f *filmkritikenServiceImpl) CreateFilm(ctx context.Context, film *Film, fi
 
 	err = f.filmkritikenRepository.SaveFilmkritiken(ctx, filmkritiken)
 	if err != nil {
-		f.imageRepository.DeleteImage(ctx, imageId)
+		_ = f.imageRepository.DeleteImage(ctx, imageId)
 		// TODO: Anderer Error String?
 		return nil, NewRepositoryError(err)
 	}
@@ -81,7 +81,7 @@ func (f *filmkritikenServiceImpl) OpenCloseBewertungen(ctx context.Context, film
 
 	filmkritiken.Details.BewertungOffen = offen
 
-	f.filmkritikenRepository.SaveFilmkritiken(ctx, filmkritiken)
+	err = f.filmkritikenRepository.SaveFilmkritiken(ctx, filmkritiken)
 	if err != nil {
 		// TODO: anderer error string?
 		return NewRepositoryError(err)

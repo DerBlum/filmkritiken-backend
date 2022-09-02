@@ -18,7 +18,7 @@ func main() {
 	log.SetLevel(getLogLevel())
 	log.Info("starting filmkritiken-backend")
 
-	mongoConfig := mongo.MongoDbConfig{}
+	mongoConfig := mongo.Config{}
 	if err := env.Parse(&mongoConfig); err != nil {
 		panic(err)
 	}
@@ -34,8 +34,10 @@ func main() {
 	}
 	filmkritikenService := filmkritiken.NewFilmkritikenService(mongoDbRepository, mongoDbRepository)
 
-	httpInbound.StartServer(&serverConfig, filmkritikenService)
-
+	err = httpInbound.StartServer(&serverConfig, filmkritikenService)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func getLogLevel() log.Level {

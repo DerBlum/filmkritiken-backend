@@ -21,7 +21,7 @@ type image struct {
 
 var updateOpts = options.Update().SetUpsert(true)
 
-type MongoDbConfig struct {
+type Config struct {
 	ConnectionString string `env:"MONGODB_CONNECTION_URI,unset"`
 	Database         string `env:"MONGODB_DATABASE"`
 }
@@ -30,12 +30,12 @@ type mongoDbRepository struct {
 	database *mongo.Database
 }
 
-func NewMongoDbRepository(ctx context.Context, config *MongoDbConfig) (*mongoDbRepository, error) {
+func NewMongoDbRepository(ctx context.Context, config *Config) (*mongoDbRepository, error) {
 	mongoDbRepository := &mongoDbRepository{}
 	return mongoDbRepository, mongoDbRepository.init(ctx, config)
 }
 
-func (repo *mongoDbRepository) init(ctx context.Context, config *MongoDbConfig) error {
+func (repo *mongoDbRepository) init(ctx context.Context, config *Config) error {
 	clientOptions := options.Client()
 	client, err := mongo.NewClient(clientOptions.ApplyURI(config.ConnectionString))
 	if err != nil {

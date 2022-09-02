@@ -3,7 +3,7 @@ package inbound
 import (
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	"github.com/gin-contrib/cors"
-	gin "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 )
 
 type ServerConfig struct {

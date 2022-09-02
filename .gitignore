@@ -17,3 +17,4 @@ main
 *.iml
 cmd/backend/__debug_bin
 mongo/
+vendor/

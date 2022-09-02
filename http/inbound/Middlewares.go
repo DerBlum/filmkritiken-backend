@@ -19,17 +19,17 @@ var jwkUrl = "https://login.microsoftonline.com/865638a4-e4fb-4aef-89e1-6824acc3
 var jwkSet jwk.Set
 
 func TraceIdMiddleware(ginCtx *gin.Context) {
-	uuid := generateTraceId()
-	newCtx := context.WithValue(ginCtx.Request.Context(), filmkritiken.Context_TraceId, uuid)
+	id := generateTraceId()
+	newCtx := context.WithValue(ginCtx.Request.Context(), filmkritiken.Context_TraceId, id)
 	ginCtx.Request = ginCtx.Request.WithContext(newCtx)
 }
 
 func generateTraceId() string {
-	uuid, err := uuid.NewUUID()
+	id, err := uuid.NewUUID()
 	if err != nil {
 		return ""
 	}
-	return uuid.String()
+	return id.String()
 }
 
 func NewAuthHandler(allowedRoles []string) func(ginCtx *gin.Context) {

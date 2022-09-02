@@ -12,12 +12,13 @@ services:
             - '27017-27019:27017-27019'
     mongo-express:
         image: 'mongo-express'
+        restart: unless-stopped
         environment:
             - ME_CONFIG_MONGODB_SERVER=mongodb
             - ME_CONFIG_MONGODB_ADMINUSERNAME=mongorootuser
             - ME_CONFIG_MONGODB_ADMINPASSWORD=mongorootpw
         ports:
-            - 8081:8081
+            - "8081:8081"
 networks: 
     default:
         external: 

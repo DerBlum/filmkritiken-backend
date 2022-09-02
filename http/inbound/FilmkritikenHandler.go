@@ -73,7 +73,7 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 	if err != nil {
 		log.Errorf("Could not get Filmkritiken from DB: %v", err)
 		ctx.Writer.WriteHeader(http.StatusInternalServerError)
-		ctx.Writer.WriteString("Could not get Filmkritiken from DB")
+		_, _ = ctx.Writer.WriteString("Could not get Filmkritiken from DB")
 		return
 	}
 
@@ -123,7 +123,7 @@ func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
 	if err != nil {
 		log.Errorf("could not create film: %v", err)
 		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
-		ginCtx.Writer.WriteString(err.Error())
+		_, _ = ginCtx.Writer.WriteString(err.Error())
 		return
 	}
 
@@ -135,20 +135,20 @@ func (h *filmkritikenHandler) handleOpenCloseBewertungen(ginCtx *gin.Context) {
 	filmkritikenId := ginCtx.Param("filmkritikenId")
 	if filmkritikenId == "" {
 		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
-		ginCtx.Writer.WriteString("Film muss angegeben werden")
+		_, _ = ginCtx.Writer.WriteString("Film muss angegeben werden")
 		return
 	}
 
 	offenStr := ginCtx.Param("offen")
 	if offenStr == "" {
 		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
-		ginCtx.Writer.WriteString("Neuer Zustand muss angegeben werden")
+		_, _ = ginCtx.Writer.WriteString("Neuer Zustand muss angegeben werden")
 		return
 	}
 
 	if offenStr != "true" && offenStr != "false" {
 		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
-		ginCtx.Writer.WriteString("Neuer Zustand muss angegeben werden")
+		_, _ = ginCtx.Writer.WriteString("Neuer Zustand muss angegeben werden")
 		return
 	}
 
@@ -156,7 +156,7 @@ func (h *filmkritikenHandler) handleOpenCloseBewertungen(ginCtx *gin.Context) {
 	if err != nil {
 		log.Errorf("could not open / close bewertungen: %v", err)
 		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
-		ginCtx.Writer.WriteString(err.Error())
+		_, _ = ginCtx.Writer.WriteString(err.Error())
 	}
 
 	err = h.filmkritikenService.OpenCloseBewertungen(ginCtx.Request.Context(), filmkritikenId, offen)
@@ -165,12 +165,12 @@ func (h *filmkritikenHandler) handleOpenCloseBewertungen(ginCtx *gin.Context) {
 		if _, ok := err.(*filmkritiken.NotFoundError); ok {
 			log.Warnf("could not find filmkritiken (%s): %v", filmkritikenId, err)
 			ginCtx.Writer.WriteHeader(http.StatusNotFound)
-			ginCtx.Writer.WriteString(err.Error())
+			_, _ = ginCtx.Writer.WriteString(err.Error())
 			return
 		}
 		log.Errorf("could not open / close bewertungen: %v", err)
 		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
-		ginCtx.Writer.WriteString(err.Error())
+		_, _ = ginCtx.Writer.WriteString(err.Error())
 		return
 	}
 
@@ -189,7 +189,7 @@ func (h *filmkritikenHandler) handleSetBewertung(ginCtx *gin.Context) {
 	filmkritikenId := ginCtx.Param("filmkritikenId")
 	if filmkritikenId == "" {
 		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
-		ginCtx.Writer.WriteString("Film muss angegeben werden")
+		_, _ = ginCtx.Writer.WriteString("Film muss angegeben werden")
 		return
 	}
 
@@ -201,7 +201,7 @@ func (h *filmkritikenHandler) handleSetBewertung(ginCtx *gin.Context) {
 	if usernameFromUrl != username {
 		log.Warnf("users in URL (%s) and token (%s) do not match", usernameFromUrl, username)
 		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
-		ginCtx.Writer.WriteString("Benutzer muss mit eingeloggtem Benutzer übereinstimmen")
+		_, _ = ginCtx.Writer.WriteString("Benutzer muss mit eingeloggtem Benutzer übereinstimmen")
 		return
 	}
 
@@ -210,18 +210,18 @@ func (h *filmkritikenHandler) handleSetBewertung(ginCtx *gin.Context) {
 	if err != nil {
 		if _, ok := err.(*filmkritiken.InvalidInputError); ok {
 			ginCtx.Writer.WriteHeader(http.StatusBadRequest)
-			ginCtx.Writer.WriteString(err.Error())
+			_, _ = ginCtx.Writer.WriteString(err.Error())
 			return
 		}
 		if _, ok := err.(*filmkritiken.NotFoundError); ok {
 			log.Warnf("could not find filmkritiken (%s): %v", req.FilmkritikenId, err)
 			ginCtx.Writer.WriteHeader(http.StatusNotFound)
-			ginCtx.Writer.WriteString(err.Error())
+			_, _ = ginCtx.Writer.WriteString(err.Error())
 			return
 		}
 		log.Errorf("could not set bewertung: %v", err)
 		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
-		ginCtx.Writer.WriteString(err.Error())
+		_, _ = ginCtx.Writer.WriteString(err.Error())
 		return
 	}
 
@@ -232,7 +232,7 @@ func (h *filmkritikenHandler) loadImage(ginCtx *gin.Context) {
 	imageId := ginCtx.Param("imageId")
 	if imageId == "" {
 		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
-		ginCtx.Writer.WriteString("Bild muss angegeben werden")
+		_, _ = ginCtx.Writer.WriteString("Bild muss angegeben werden")
 		return
 	}
 
@@ -241,18 +241,18 @@ func (h *filmkritikenHandler) loadImage(ginCtx *gin.Context) {
 		if _, ok := err.(*filmkritiken.NotFoundError); ok {
 			log.Warnf("could not find image (%s): %v", imageId, err)
 			ginCtx.Writer.WriteHeader(http.StatusNotFound)
-			ginCtx.Writer.WriteString("Bild konnte nicht gefunden werden")
+			_, _ = ginCtx.Writer.WriteString("Bild konnte nicht gefunden werden")
 			return
 		}
 		log.Errorf("could not get image: %v", err)
 		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
-		ginCtx.Writer.WriteString(err.Error())
+		_, _ = ginCtx.Writer.WriteString(err.Error())
 		return
 	}
 
 	ginCtx.Writer.Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%v, immutable", imageCacheDuration))
 	ginCtx.Writer.WriteHeader(http.StatusOK)
-	ginCtx.Writer.Write(*imageBites)
+	_, _ = ginCtx.Writer.Write(*imageBites)
 
 }
 
