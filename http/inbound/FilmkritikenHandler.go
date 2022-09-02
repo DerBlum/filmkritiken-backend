@@ -3,15 +3,14 @@ package inbound
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
+	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
-
-	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
-	gin "github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 )
 
 // Have images cached for 30 days
@@ -81,39 +80,55 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 }
 
 func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
-	req := &FilmRequest{}
-	jsonContent, hasJson := ginCtx.GetPostForm("json")
-	if !hasJson {
-		log.Error("no json content in create film request")
+	// read json
+	fileHeader, err := ginCtx.FormFile("json")
+	if err != nil {
+		log.Errorf("could not get json payload: %v", err)
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	file, err := fileHeader.Open()
+	if err != nil {
+		log.Errorf("could not open json payload: %v", err)
+		ginCtx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	jsonBites, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Errorf("could not read json payload: %v", err)
+		ginCtx.AbortWithStatus(http.StatusBadRequest)
+		return
 	}
 
-	err := json.Unmarshal([]byte(jsonContent), &req)
+	req := &FilmRequest{}
+	err = json.Unmarshal(jsonBites, &req)
 	if err != nil {
 		log.Errorf("could not map json to FilmRequest: %v", err)
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	fileHeader, err := ginCtx.FormFile("file")
+	// read image
+	fileHeader, err = ginCtx.FormFile("image")
 	if err != nil {
-		log.Errorf("could not get uploaded file: %v", err)
+		log.Errorf("could not get uploaded image: %v", err)
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	file, err := fileHeader.Open()
+	file, err = fileHeader.Open()
 	if err != nil {
-		log.Errorf("could not open uploaded file: %v", err)
+		log.Errorf("could not open uploaded image: %v", err)
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 	imageBites, err := ioutil.ReadAll(file)
 	if err != nil {
-		log.Errorf("could not read uploaded file: %v", err)
+		log.Errorf("could not read uploaded image: %v", err)
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
+	// create film
 	filmkritikenDetails := &filmkritiken.FilmkritikenDetails{
 		BeitragVon:     req.Von,
 		BesprochenAm:   req.BesprochenAm,
