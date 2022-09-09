@@ -73,7 +73,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     permissions:
-      content: read
+      contents: read
     needs:
       - push
     steps:
