@@ -26,6 +26,11 @@ jobs:
         run: |
           docker build -o output -f Dockerfile_build .
 
+      - name: Debug output
+        run: |
+          ls
+          ls output/
+
       - name: Sonarqube Check
         uses: sonarsource/sonarqube-scan-action@master
         env:
