@@ -24,7 +24,8 @@ jobs:
 
       - name: Build and Test
         run: |
-          docker build -o output -f Dockerfile_build .
+          docker version
+          DOCKER_BUILDKIT=1 docker build -o output -f Dockerfile_build .
 
       - name: Debug output
         run: |
