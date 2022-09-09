@@ -1,0 +1,15 @@
+FROM golang:alpine as build
+
+RUN apk --no-cache add make git gcc libtool musl-dev ca-certificates dumb-init 
+
+WORKDIR /go/src/app
+COPY . .
+
+RUN make build
+RUN make test-coverage
+
+FROM scratch as export-stage
+
+COPY --from=build /go/src/app/main /
+COPY --from=build /go/src/app/sonar-report.json /
+COPY --from=build /go/src/app/test-coverage.out /

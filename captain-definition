@@ -1,4 +1,4 @@
 {
     "schemaVersion": 2,
-    "dockerfilePath": "./Dockerfile"
+    "imageName": "ghcr.io/derblum/filmkritiken-backend:release"
 }

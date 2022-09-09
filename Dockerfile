@@ -1,14 +1,11 @@
-FROM golang:alpine as build
-
-RUN apk --no-cache add make git gcc libtool musl-dev ca-certificates dumb-init 
-
-WORKDIR /go/src/app
-COPY . .
-
-RUN make build
-#RUN make test
-
 FROM alpine:latest
 
+WORKDIR /app
+
 ENTRYPOINT ./main
-COPY --from=build /go/src/app/main .
+COPY output/main .
+
+USER root
+RUN chmod a+rw -R .
+RUN chmod +x main
+USER 1001

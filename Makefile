@@ -2,6 +2,8 @@ build:
 	go build -v ./cmd/backend/main.go
 test:
 	go test -v ./...
+test-coverage:
+	go test -short -json -coverprofile=test-coverage.out ./... > ./sonar-report.json
 run:
 	bash -c "set -a; source ./config/local.env; set +a && go run cmd/backend/main.go"
 run-docker:
