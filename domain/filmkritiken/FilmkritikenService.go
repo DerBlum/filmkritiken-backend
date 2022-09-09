@@ -57,7 +57,6 @@ func (f *filmkritikenServiceImpl) CreateFilm(ctx context.Context, film *Film, fi
 
 	imageId, err := f.imageRepository.SaveImage(ctx, imageBites)
 	if err != nil {
-		// TODO: Anderer Error String?
 		return nil, NewRepositoryError(err)
 	}
 	film.Image.Id = imageId
@@ -65,7 +64,6 @@ func (f *filmkritikenServiceImpl) CreateFilm(ctx context.Context, film *Film, fi
 	err = f.filmkritikenRepository.SaveFilmkritiken(ctx, filmkritiken)
 	if err != nil {
 		_ = f.imageRepository.DeleteImage(ctx, imageId)
-		// TODO: Anderer Error String?
 		return nil, NewRepositoryError(err)
 	}
 

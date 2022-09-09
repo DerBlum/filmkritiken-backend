@@ -12,6 +12,7 @@ run-docker:
 	docker stop filmkritiken-backend || true
 	docker rm filmkritiken-backend || true
 	docker rmi filmkritiken-backend || true
+	docker build -o output -f Dockerfile_build .
 	docker build -t filmkritiken-backend .
 	docker run --rm -it \
 		--network filmkritiken \
