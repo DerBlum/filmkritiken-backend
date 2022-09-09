@@ -24,13 +24,7 @@ jobs:
 
       - name: Build and Test
         run: |
-          docker version
           DOCKER_BUILDKIT=1 docker build -o output -f Dockerfile_build .
-
-      - name: Debug output
-        run: |
-          ls
-          ls output/
 
       - name: Sonarqube Check
         uses: sonarsource/sonarqube-scan-action@master
@@ -78,6 +72,16 @@ jobs:
     needs:
       - build_push
     steps:
+
+      # Login against a Docker registry
+      # https://github.com/docker/login-action
+      - name: Log into registry ${{ env.IMAGE_REGISTRY }}
+        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+        with:
+          registry: ${{ env.IMAGE_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
