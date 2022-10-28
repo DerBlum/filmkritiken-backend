@@ -4,10 +4,13 @@ import (
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type ServerConfig struct {
-	CorsAllowOrigins []string `env:"CORS_ALLOW_ORIGINS" envDefault:"https://filmkritiken-frontend.marsrover.418-teapot.de"`
+	CorsAllowOrigins        []string `env:"CORS_ALLOW_ORIGINS" envDefault:"https://filmkritiken-frontend.marsrover.418-teapot.de"`
+	MetricsEndpointUser     string   `env:"METRICS_ENDPOINT_USER"`
+	MetricsEndpointPassword string   `env:"METRICS_ENDPOINT_PASSWORD"`
 }
 
 func StartServer(serverConfig *ServerConfig, filmkritikenService filmkritiken.FilmkritikenService) error {
@@ -29,8 +32,14 @@ func StartServer(serverConfig *ServerConfig, filmkritikenService filmkritiken.Fi
 			},
 		),
 	)
-	api := r.Group("/api", handlers...)
 
+	metricsAuthHandler := NewEmptyHandler()
+	if serverConfig.MetricsEndpointUser != "" && serverConfig.MetricsEndpointPassword != "" {
+		metricsAuthHandler = NewBasicAuthHandler(serverConfig.MetricsEndpointUser, serverConfig.MetricsEndpointPassword)
+	}
+	r.GET("/metrics", metricsAuthHandler, gin.WrapH(promhttp.Handler()))
+
+	api := r.Group("/api", handlers...)
 	api.GET("/filmkritiken", filmkritikenHandler.handleGetFilmkritiken)
 	api.GET("/images/:imageId", filmkritikenHandler.loadImage)
 	api.POST(

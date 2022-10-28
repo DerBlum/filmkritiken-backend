@@ -2,6 +2,7 @@ package inbound
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"net/http"
@@ -32,6 +33,46 @@ func generateTraceId() string {
 	return id.String()
 }
 
+func NewEmptyHandler() func(ginCtx *gin.Context) {
+	return func(ginCtx *gin.Context) {
+		// do nothing
+	}
+}
+
+func NewBasicAuthHandler(username string, password string) func(ginCtx *gin.Context) {
+	expectedAuthString := base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+
+	return func(ginCtx *gin.Context) {
+		basicAuthHandler(ginCtx, expectedAuthString)
+	}
+}
+
+func basicAuthHandler(ginCtx *gin.Context, auth string) {
+	authHeader := ginCtx.Request.Header["Authorization"]
+
+	if len(authHeader) == 0 {
+		log.Warn("received request without auth header")
+		ginCtx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	// "Basic ..."
+	fields := strings.Fields(authHeader[0])
+	if len(fields) <= 1 || fields[0] != "Basic" {
+		log.Warn("received request with malformed auth header")
+		ginCtx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	tokenString := fields[1]
+
+	if tokenString != auth {
+		log.Warn("client tried accessing endpoint with invalid Basic Auth")
+		ginCtx.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+}
+
 func NewAuthHandler(allowedRoles []string) func(ginCtx *gin.Context) {
 	return func(ginCtx *gin.Context) {
 		authHandler(ginCtx, allowedRoles)
@@ -49,7 +90,7 @@ func authHandler(ginCtx *gin.Context, allowedRoles []string) {
 
 	// "Bearer ..."
 	fields := strings.Fields(authHeader[0])
-	if len(fields) <= 1 {
+	if len(fields) <= 1 || fields[0] != "Bearer" {
 		log.Warn("received request with malformed auth header")
 		ginCtx.AbortWithStatus(http.StatusUnauthorized)
 		return
