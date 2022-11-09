@@ -3,7 +3,7 @@ module github.com/DerBlum/filmkritiken-backend
 go 1.19
 
 require (
-	github.com/caarlos0/env/v6 v6.6.0
+	github.com/caarlos0/env/v6 v6.10.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.1
