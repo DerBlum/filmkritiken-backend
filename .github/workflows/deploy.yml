@@ -3,6 +3,9 @@ name: Deploy
 on:
   push:
     branches: [ master ]
+  workflow_run:
+    workflows: [Build]
+    types: [completed]
 
 
 env:
@@ -12,10 +15,9 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: read
-    needs:
-      - build_push
 
     steps:
       - uses: actions/checkout@master
@@ -27,3 +29,9 @@ jobs:
           app: 'filmkritiken-backend'
           token: '${{ secrets.CAPROVER_APP_TOKEN }}'
           image: '${{ env.FULL_IMAGE_NAME }}'
+
+  noop:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: echo "No deployment after failed build"
