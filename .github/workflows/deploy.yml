@@ -13,7 +13,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ $GITHUB_REF_NAME == 'master' && github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ ${{GITHUB_REF_NAME}} == 'master' && github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: read
 
