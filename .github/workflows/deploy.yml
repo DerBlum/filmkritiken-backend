@@ -13,7 +13,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ ${{GITHUB_REF_NAME}} == 'master' && github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.ref == 'master' && github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: read
 
@@ -30,6 +30,6 @@ jobs:
 
   noop:
     runs-on: ubuntu-latest
-    if: ${{ $GITHUB_REF_NAME != 'master' || github.event.workflow_run.conclusion == 'failure' }}
+    if: ${{ github.ref != 'master' || github.event.workflow_run.conclusion == 'failure' }}
     steps:
       - run: echo "No deployment because of wrong branch of failure of build step"
