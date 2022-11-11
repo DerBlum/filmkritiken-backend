@@ -1,4 +1,4 @@
-name: Build_Deploy
+name: Build
 
 on:
   push:
@@ -94,21 +94,3 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
-
-  deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    needs:
-      - build_push
-
-    steps:
-      - uses: actions/checkout@master
-
-      - name: CapRover deploy with Token
-        uses: MrFreasy/action-caprover@v2
-        with:
-          host: 'https://captain.marsrover.418-teapot.de'
-          app: 'filmkritiken-backend'
-          token: '${{ secrets.CAPROVER_APP_TOKEN }}'
-          image: '${{ env.FULL_IMAGE_NAME }}'

@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+
+env:
+  FULL_IMAGE_NAME: ghcr.io/derblum/filmkritiken-backend:release
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs:
+      - build_push
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: CapRover deploy with Token
+        uses: MrFreasy/action-caprover@v2
+        with:
+          host: 'https://captain.marsrover.418-teapot.de'
+          app: 'filmkritiken-backend'
+          token: '${{ secrets.CAPROVER_APP_TOKEN }}'
+          image: '${{ env.FULL_IMAGE_NAME }}'
