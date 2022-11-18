@@ -8,7 +8,7 @@ import (
 )
 
 type ServerConfig struct {
-	CorsAllowOrigins        []string `env:"CORS_ALLOW_ORIGINS" envDefault:"https://filmkritiken-frontend.marsrover.418-teapot.de"`
+	CorsAllowOrigins        []string `env:"CORS_ALLOW_ORIGINS" envDefault:"https://filmkritiken-frontend.marsrover.418-teapot.de,https://filmkritiken.marsrover.418-teapot.de"`
 	MetricsEndpointUser     string   `env:"METRICS_ENDPOINT_USER"`
 	MetricsEndpointPassword string   `env:"METRICS_ENDPOINT_PASSWORD"`
 }
