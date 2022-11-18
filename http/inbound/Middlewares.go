@@ -8,10 +8,10 @@ import (
 	"strings"
 
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
-	"github.com/lestrrat-go/jwx/jwk"
+	"github.com/lestrrat-go/jwx/v2/jwk"
 	log "github.com/sirupsen/logrus"
 )
 
