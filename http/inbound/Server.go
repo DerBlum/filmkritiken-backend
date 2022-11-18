@@ -5,6 +5,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	log "github.com/sirupsen/logrus"
 )
 
 type ServerConfig struct {
@@ -33,11 +34,14 @@ func StartServer(serverConfig *ServerConfig, filmkritikenService filmkritiken.Fi
 		),
 	)
 
+	ginOmitLogConfig := gin.LoggerConfig{SkipPaths: []string{"/"}}
+	ginOmitLogMiddleware := gin.LoggerWithConfig(ginOmitLogConfig)
+	r.GET("/", ginOmitLogMiddleware, healthcheckHandler)
 	metricsAuthHandler := NewEmptyHandler()
 	if serverConfig.MetricsEndpointUser != "" && serverConfig.MetricsEndpointPassword != "" {
 		metricsAuthHandler = NewBasicAuthHandler(serverConfig.MetricsEndpointUser, serverConfig.MetricsEndpointPassword)
 	}
-	r.GET("/metrics", metricsAuthHandler, gin.WrapH(promhttp.Handler()))
+	r.GET("/metrics", ginOmitLogMiddleware, metricsAuthHandler, gin.WrapH(promhttp.Handler()))
 
 	api := r.Group("/api", handlers...)
 	api.GET("/filmkritiken", filmkritikenHandler.handleGetFilmkritiken)
@@ -63,4 +67,9 @@ func StartServer(serverConfig *ServerConfig, filmkritikenService filmkritiken.Fi
 		return err
 	}
 	return nil
+}
+
+func healthcheckHandler(context *gin.Context) {
+	log.Trace("healthcheck called")
+	context.Status(200)
 }
