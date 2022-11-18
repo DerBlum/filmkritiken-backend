@@ -6,7 +6,7 @@ import (
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -50,11 +50,11 @@ func NewFilmkritikenHandler(filmkritikenService filmkritiken.FilmkritikenService
 	}
 }
 
-func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
+func (h *filmkritikenHandler) handleGetFilmkritiken(ginCtx *gin.Context) {
 	limit := 10
 	offset := 0
 
-	queryParams := ctx.Request.URL.Query()
+	queryParams := ginCtx.Request.URL.Query()
 	parsedValue, err := parseIntFromQueryParam(queryParams, "limit")
 	if err == nil {
 		limit = parsedValue
@@ -68,15 +68,15 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ctx *gin.Context) {
 		Limit:  limit,
 		Offset: offset,
 	}
-	result, err := h.filmkritikenService.GetFilmkritiken(ctx.Request.Context(), filter)
+	result, err := h.filmkritikenService.GetFilmkritiken(ginCtx.Request.Context(), filter)
 	if err != nil {
 		log.Errorf("Could not get Filmkritiken from DB: %v", err)
-		ctx.Writer.WriteHeader(http.StatusInternalServerError)
-		_, _ = ctx.Writer.WriteString("Could not get Filmkritiken from DB")
+		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
+		_, _ = ginCtx.Writer.WriteString("Could not get Filmkritiken from DB")
 		return
 	}
 
-	ctx.JSON(http.StatusOK, result)
+	ginCtx.JSON(http.StatusOK, result)
 }
 
 func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
@@ -93,7 +93,7 @@ func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	jsonBites, err := ioutil.ReadAll(file)
+	jsonBites, err := io.ReadAll(file)
 	if err != nil {
 		log.Errorf("could not read json payload: %v", err)
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
@@ -121,7 +121,7 @@ func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	imageBites, err := ioutil.ReadAll(file)
+	imageBites, err := io.ReadAll(file)
 	if err != nil {
 		log.Errorf("could not read uploaded image: %v", err)
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
