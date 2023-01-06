@@ -21,9 +21,9 @@ jobs:
       - uses: actions/checkout@master
 
       - name: CapRover deploy with Token
-        uses: MrFreasy/action-caprover@v2
-        with:
-          host: 'https://captain.marsrover.418-teapot.de'
+        uses: caprover/deploy-from-github@d76580d79952f6841c453bb3ed37ef452b19752c
+        with:          
+          server: 'https://captain.marsrover.418-teapot.de'
           app: 'filmkritiken-backend'
           token: '${{ secrets.CAPROVER_APP_TOKEN }}'
           image: '${{ env.FULL_IMAGE_NAME }}'
