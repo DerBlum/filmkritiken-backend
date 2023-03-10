@@ -6,7 +6,7 @@ import (
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	httpInbound "github.com/DerBlum/filmkritiken-backend/http/inbound"
 	"github.com/DerBlum/filmkritiken-backend/infrastructure/db/mongo"
-	"github.com/caarlos0/env/v6"
+	"github.com/caarlos0/env/v7"
 	log "github.com/sirupsen/logrus"
 )
 
