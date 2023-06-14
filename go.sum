@@ -233,6 +233,8 @@ github.com/lestrrat-go/jwx/v2 v2.0.9 h1:TRX4Q630UXxPVLvP5vGaqVJO7S+0PE6msRZUsFSB
 github.com/lestrrat-go/jwx/v2 v2.0.9/go.mod h1:K68euYaR95FnL0hIQB8VvzL70vB7pSifbJUydCTPmgM=
 github.com/lestrrat-go/jwx/v2 v2.0.10 h1:a3/O1quLp3RXZc7n0IwtlJgxTeurh/0P36ERukBO/sg=
 github.com/lestrrat-go/jwx/v2 v2.0.10/go.mod h1:ZtPtMFlrfDrH2Y0iwfa3dRFn8VzwBrB+cyrm3IBWdDg=
+github.com/lestrrat-go/jwx/v2 v2.0.11 h1:ViHMnaMeaO0qV16RZWBHM7GTrAnX2aFLVKofc7FuKLQ=
+github.com/lestrrat-go/jwx/v2 v2.0.11/go.mod h1:ZtPtMFlrfDrH2Y0iwfa3dRFn8VzwBrB+cyrm3IBWdDg=
 github.com/lestrrat-go/option v1.0.0 h1:WqAWL8kh8VcSoD6xjSH34/1m8yxluXQbDeKNfvFeEO4=
 github.com/lestrrat-go/option v1.0.0/go.mod h1:5ZHFbivi4xwXxhxY9XHDe2FHo6/Z7WWmtT7T5nBBp3I=
 github.com/lestrrat-go/option v1.0.1 h1:oAzP2fvZGQKWkvHa1/SAcFolBEca1oN+mQ7eooNBEYU=
