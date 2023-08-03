@@ -12,7 +12,7 @@ require (
 	github.com/lestrrat-go/jwx/v2 v2.0.11
 	github.com/prometheus/client_golang v1.16.0
 	github.com/sirupsen/logrus v1.9.3
-	go.mongodb.org/mongo-driver v1.12.0
+	go.mongodb.org/mongo-driver v1.12.1
 )
 
 require (
@@ -44,7 +44,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.42.0 // indirect
 	github.com/prometheus/procfs v0.10.1 // indirect
