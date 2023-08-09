@@ -12,7 +12,7 @@ import (
 )
 
 type ServerConfig struct {
-	CorsAllowOrigins        []string `env:"CORS_ALLOW_ORIGINS" envDefault:"https://filmkritiken-frontend.marsrover.418-teapot.de,https://filmkritiken.marsrover.418-teapot.de"`
+	CorsAllowOrigins        []string `env:"CORS_ALLOW_ORIGINS" envDefault:"https://filmkritiken.marsrover.418-teapot.de"`
 	MetricsEndpointUser     string   `env:"METRICS_ENDPOINT_USER"`
 	MetricsEndpointPassword string   `env:"METRICS_ENDPOINT_PASSWORD"`
 }
@@ -38,7 +38,7 @@ func StartServer(serverConfig *ServerConfig, filmkritikenService filmkritiken.Fi
 		cors.New(
 			cors.Config{
 				AllowOrigins:     serverConfig.CorsAllowOrigins,
-				AllowMethods:     []string{"GET", "POST", "PUT", "PATCH"},
+				AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "OPTIONS"},
 				AllowHeaders:     []string{"content-type", "Content-Length", "Accept-Encoding", "Authorization", "origin", "Cache-Control"},
 				AllowCredentials: true,
 			},
