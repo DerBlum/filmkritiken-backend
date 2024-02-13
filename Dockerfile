@@ -2,7 +2,7 @@ FROM alpine:latest
 
 WORKDIR /app
 
-ENTRYPOINT ./main
+ENTRYPOINT /app/main
 COPY output/main .
 
 USER root
