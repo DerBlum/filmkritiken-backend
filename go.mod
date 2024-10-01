@@ -12,7 +12,7 @@ require (
 	github.com/lestrrat-go/jwx/v2 v2.1.1
 	github.com/prometheus/client_golang v1.20.4
 	github.com/sirupsen/logrus v1.9.3
-	go.mongodb.org/mongo-driver v1.17.0
+	go.mongodb.org/mongo-driver v1.17.1
 )
 
 require (
