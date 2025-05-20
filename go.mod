@@ -7,7 +7,7 @@ toolchain go1.24.3
 require (
 	github.com/caarlos0/env/v7 v7.1.0
 	github.com/gin-contrib/cors v1.7.5
-	github.com/gin-gonic/gin v1.10.0
+	github.com/gin-gonic/gin v1.10.1
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.6.0
