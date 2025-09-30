@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: CapRover deploy with Token
-        uses: caprover/deploy-from-github@v1.1.2
+        uses: caprover/deploy-from-github@v1.2.0
         with:          
           server: 'https://captain.marsrover.418-teapot.de'
           app: 'filmkritiken-backend'
