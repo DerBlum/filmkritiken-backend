@@ -1,4 +1,4 @@
-FROM golang:1.25.4-alpine as build
+FROM golang:1.25.5-alpine as build
 
 RUN apk --no-cache add make git gcc libtool musl-dev ca-certificates dumb-init 
 
