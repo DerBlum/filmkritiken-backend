@@ -2,7 +2,7 @@ module github.com/DerBlum/filmkritiken-backend
 
 go 1.23.0
 
-toolchain go1.25.7
+toolchain go1.26.0
 
 require (
 	github.com/caarlos0/env/v7 v7.1.0
