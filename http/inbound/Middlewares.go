@@ -9,9 +9,9 @@ import (
 
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	"github.com/lestrrat-go/jwx/v2/jwk"
+	"github.com/lestrrat-go/jwx/v3/jwk"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -108,8 +108,7 @@ func getKey(token *jwt.Token) (interface{}, error) {
 
 	if key, ok := jwkSet.LookupKeyID(keyId); ok {
 		var rawKey interface{}
-		err := key.Raw(&rawKey)
-		if err != nil {
+		if err := jwk.Export(key, &rawKey); err != nil {
 			return nil, fmt.Errorf("error getting raw key id from jwkSet: %w", err)
 		}
 

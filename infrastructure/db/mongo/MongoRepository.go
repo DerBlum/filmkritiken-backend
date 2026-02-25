@@ -5,10 +5,9 @@ import (
 	"time"
 
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 const (
@@ -21,7 +20,7 @@ type image struct {
 	Image   *[]byte
 }
 
-var updateOpts = options.Update().SetUpsert(true)
+var updateOpts = options.UpdateOne().SetUpsert(true)
 
 type Config struct {
 	ConnectionString string `env:"MONGODB_CONNECTION_URI,unset"`
@@ -38,13 +37,7 @@ func NewMongoDbRepository(ctx context.Context, config *Config) (*mongoDbReposito
 }
 
 func (repo *mongoDbRepository) init(ctx context.Context, config *Config) error {
-	clientOptions := options.Client()
-	client, err := mongo.NewClient(clientOptions.ApplyURI(config.ConnectionString))
-	if err != nil {
-		return err
-	}
-
-	err = client.Connect(ctx)
+	client, err := mongo.Connect(options.Client().ApplyURI(config.ConnectionString))
 	if err != nil {
 		return err
 	}
@@ -91,7 +84,7 @@ func (repo *mongoDbRepository) GetFilmkritiken(ctx context.Context, filter *film
 }
 
 func (repo *mongoDbRepository) SaveImage(ctx context.Context, imageBites *[]byte) (string, error) {
-	id := primitive.NewObjectID().Hex()
+	id := bson.NewObjectID().Hex()
 
 	image := &image{
 		ImageId: id,
@@ -99,7 +92,7 @@ func (repo *mongoDbRepository) SaveImage(ctx context.Context, imageBites *[]byte
 	}
 
 	filter := bson.M{"_id": bson.M{"$eq": image.ImageId}}
-	update := bson.D{primitive.E{Key: "$set", Value: image}}
+	update := bson.D{bson.E{Key: "$set", Value: image}}
 	_, err := repo.database.Collection(imagesCollectionName).UpdateOne(ctx, filter, update, updateOpts)
 
 	if err != nil {
@@ -140,11 +133,11 @@ func (repo *mongoDbRepository) DeleteImage(ctx context.Context, imageId string) 
 func (repo *mongoDbRepository) SaveFilmkritiken(ctx context.Context, filmkritiken *filmkritiken.Filmkritiken) error {
 
 	if filmkritiken.Id == "" {
-		filmkritiken.Id = primitive.NewObjectID().Hex()
+		filmkritiken.Id = bson.NewObjectID().Hex()
 	}
 
 	filter := bson.M{"_id": bson.M{"$eq": filmkritiken.Id}}
-	update := bson.D{primitive.E{Key: "$set", Value: filmkritiken}}
+	update := bson.D{bson.E{Key: "$set", Value: filmkritiken}}
 	_, err := repo.database.Collection(filmkritikenCollectionName).UpdateOne(ctx, filter, update, updateOpts)
 
 	if err != nil {
@@ -156,7 +149,7 @@ func (repo *mongoDbRepository) SaveFilmkritiken(ctx context.Context, filmkritike
 
 func (repo *mongoDbRepository) UpdateBesprochenAm(ctx context.Context, filmkritikenId string, besprochenAm time.Time) error {
 	filter := bson.M{"_id": bson.M{"$eq": filmkritikenId}}
-	update := bson.D{primitive.E{Key: "$set", Value: bson.D{primitive.E{Key: "details.besprochenam", Value: besprochenAm}}}}
+	update := bson.D{bson.E{Key: "$set", Value: bson.D{bson.E{Key: "details.besprochenam", Value: besprochenAm}}}}
 	result, err := repo.database.Collection(filmkritikenCollectionName).UpdateOne(ctx, filter, update)
 	if err != nil {
 		return err
