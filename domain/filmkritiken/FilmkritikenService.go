@@ -3,6 +3,7 @@ package filmkritiken
 import (
 	"context"
 	"fmt"
+	"time"
 )
 
 type (
@@ -12,12 +13,14 @@ type (
 		OpenCloseBewertungen(ctx context.Context, filmkritikenId string, offen bool) error
 		SetKritik(ctx context.Context, filmkritikenId string, von string, bewertung int) error
 		LoadImage(ctx context.Context, imageId string) (*[]byte, error)
+		UpdateBesprochenAm(ctx context.Context, filmkritikenId string, besprochenAm time.Time) error
 	}
 
 	FilmkritikenRepository interface {
 		FindFilmkritiken(ctx context.Context, filmkritikenId string) (*Filmkritiken, error)
 		GetFilmkritiken(ctx context.Context, filter *FilmkritikenFilter) ([]*Filmkritiken, error)
 		SaveFilmkritiken(ctx context.Context, filmkritiken *Filmkritiken) error
+		UpdateBesprochenAm(ctx context.Context, filmkritikenId string, besprochenAm time.Time) error
 	}
 
 	ImageRepository interface {
@@ -138,4 +141,12 @@ func (f *filmkritikenServiceImpl) LoadImage(ctx context.Context, imageId string)
 	}
 
 	return imageBites, nil
+}
+
+func (f *filmkritikenServiceImpl) UpdateBesprochenAm(ctx context.Context, filmkritikenId string, besprochenAm time.Time) error {
+	err := f.filmkritikenRepository.UpdateBesprochenAm(ctx, filmkritikenId, besprochenAm)
+	if err != nil {
+		return err
+	}
+	return nil
 }

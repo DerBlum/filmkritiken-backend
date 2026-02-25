@@ -7,6 +7,7 @@ package mocks
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	filmkritiken "github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	gomock "github.com/golang/mock/gomock"
@@ -108,6 +109,20 @@ func (mr *MockFilmkritikenServiceMockRecorder) SetKritik(ctx, filmkritikenId, vo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetKritik", reflect.TypeOf((*MockFilmkritikenService)(nil).SetKritik), ctx, filmkritikenId, von, bewertung)
 }
 
+// UpdateBesprochenAm mocks base method.
+func (m *MockFilmkritikenService) UpdateBesprochenAm(ctx context.Context, filmkritikenId string, besprochenAm time.Time) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateBesprochenAm", ctx, filmkritikenId, besprochenAm)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateBesprochenAm indicates an expected call of UpdateBesprochenAm.
+func (mr *MockFilmkritikenServiceMockRecorder) UpdateBesprochenAm(ctx, filmkritikenId, besprochenAm interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateBesprochenAm", reflect.TypeOf((*MockFilmkritikenService)(nil).UpdateBesprochenAm), ctx, filmkritikenId, besprochenAm)
+}
+
 // MockFilmkritikenRepository is a mock of FilmkritikenRepository interface.
 type MockFilmkritikenRepository struct {
 	ctrl     *gomock.Controller
@@ -173,6 +188,20 @@ func (m *MockFilmkritikenRepository) SaveFilmkritiken(ctx context.Context, filmk
 func (mr *MockFilmkritikenRepositoryMockRecorder) SaveFilmkritiken(ctx, filmkritiken interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveFilmkritiken", reflect.TypeOf((*MockFilmkritikenRepository)(nil).SaveFilmkritiken), ctx, filmkritiken)
+}
+
+// UpdateBesprochenAm mocks base method.
+func (m *MockFilmkritikenRepository) UpdateBesprochenAm(ctx context.Context, filmkritikenId string, besprochenAm time.Time) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateBesprochenAm", ctx, filmkritikenId, besprochenAm)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateBesprochenAm indicates an expected call of UpdateBesprochenAm.
+func (mr *MockFilmkritikenRepositoryMockRecorder) UpdateBesprochenAm(ctx, filmkritikenId, besprochenAm interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateBesprochenAm", reflect.TypeOf((*MockFilmkritikenRepository)(nil).UpdateBesprochenAm), ctx, filmkritikenId, besprochenAm)
 }
 
 // MockImageRepository is a mock of ImageRepository interface.

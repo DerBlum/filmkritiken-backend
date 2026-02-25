@@ -126,6 +126,49 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
+  /api/filmkritiken/{filmkritikenId}/besprochenAm:
+    patch:
+      description: Update the BesprochenAm timestamp of a Filmkritiken
+      tags:
+        - Filmkritiken
+      security:
+        - bearerAuth: [film.add]
+      parameters:
+        - in: path
+          name: filmkritikenId
+          required: true
+          schema:
+            type: string
+            description: ID der Filmkritiken.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetBesprochenAmRequest"
+      responses:
+        "204":
+          description: Success
+        "400":
+          description: Request data is invalid
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          description: Filmkritiken could not be found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Filmkritiken konnten nicht gefunden werden.
+        "500":
+          $ref: "#/components/responses/InternalError"
+
   /api/filmkritiken/{filmkritikenId}/bewertungen/{username}:
     put:
       description: Add single Bewertung for Filmkritiken
@@ -353,6 +396,16 @@ components:
           type: integer
           minimum: 1
           maximum: 10
+    SetBesprochenAmRequest:
+      type: object
+      properties:
+        besprochenam:
+          type: string
+          format: date-time
+          description: Datum nach ISO 8601 / EN 28601, an dem der Film besprochen wird / wurde.
+          example: "2021-04-24T20:00:00Z"
+      required:
+        - besprochenam
     SetBewertungBulkRequest:
       type: object
       properties:

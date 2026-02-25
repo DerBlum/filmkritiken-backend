@@ -3,10 +3,12 @@ package filmkritiken_test
 import (
 	"context"
 	"errors"
+	"testing"
+	"time"
+
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	"github.com/DerBlum/filmkritiken-backend/mocks"
 	"github.com/golang/mock/gomock"
-	"testing"
 )
 
 //go:generate mockgen -source=FilmkritikenService.go -destination=../../mocks/FilmkritikenService.go -package mocks
@@ -133,5 +135,60 @@ func TestFilmkritikenServiceImpl_CreateFilm_ErrorSaveFilmkritiken(t *testing.T) 
 	var re *filmkritiken.RepositoryError
 	if !errors.As(err, &re) {
 		t.Errorf("Expected RepositoryError but got %v", err)
+	}
+}
+
+func TestFilmkritikenServiceImpl_UpdateBesprochenAm(t *testing.T) {
+	// given
+	ctrl := gomock.NewController(t)
+
+	filmkritikenRepository := mocks.NewMockFilmkritikenRepository(ctrl)
+	imageRepository := mocks.NewMockImageRepository(ctrl)
+
+	ctx := context.Background()
+	filmkritikenId := "fk_1"
+	besprochenAm := time.Date(2024, 10, 18, 20, 0, 0, 0, time.UTC)
+
+	filmkritikenRepository.EXPECT().UpdateBesprochenAm(ctx, filmkritikenId, besprochenAm).Return(nil)
+
+	service := filmkritiken.NewFilmkritikenService(filmkritikenRepository, imageRepository)
+
+	// when
+	err := service.UpdateBesprochenAm(ctx, filmkritikenId, besprochenAm)
+
+	// then
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+}
+
+func TestFilmkritikenServiceImpl_UpdateBesprochenAm_NotFound(t *testing.T) {
+	// given
+	ctrl := gomock.NewController(t)
+
+	filmkritikenRepository := mocks.NewMockFilmkritikenRepository(ctrl)
+	imageRepository := mocks.NewMockImageRepository(ctrl)
+
+	ctx := context.Background()
+	filmkritikenId := "fk_doesnotexist"
+	besprochenAm := time.Date(2024, 10, 18, 20, 0, 0, 0, time.UTC)
+
+	filmkritikenRepository.EXPECT().
+		UpdateBesprochenAm(ctx, filmkritikenId, besprochenAm).
+		Return(filmkritiken.NewNotFoundErrorFromString("Filmkritiken konnten nicht gefunden werden."))
+
+	service := filmkritiken.NewFilmkritikenService(filmkritikenRepository, imageRepository)
+
+	// when
+	err := service.UpdateBesprochenAm(ctx, filmkritikenId, besprochenAm)
+
+	// then
+	if err == nil {
+		t.Error("expected error but got none")
+		return
+	}
+	var nfe *filmkritiken.NotFoundError
+	if !errors.As(err, &nfe) {
+		t.Errorf("Expected NotFoundError but got %v", err)
 	}
 }

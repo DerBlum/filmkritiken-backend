@@ -74,6 +74,11 @@ func StartServer(serverConfig *ServerConfig, filmkritikenService filmkritiken.Fi
 		NewAuthHandler([]string{"bewertung.openclose"}),
 		metricsHandlerWrapper(filmkritikenHandler.handleOpenCloseBewertungen, "openCloseBewertungen"),
 	)
+	api.PATCH(
+		"/filmkritiken/:filmkritikenId/besprochenAm",
+		NewAuthHandler([]string{"film.add"}),
+		filmkritikenHandler.handleSetBesprochenAm,
+	)
 	err := r.Run()
 
 	if err != nil {

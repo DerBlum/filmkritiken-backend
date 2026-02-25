@@ -34,6 +34,10 @@ type (
 		Bewertungen    []*BenutzerBewertung `json:"benutzerBewertungen"`
 	}
 
+	SetBesprochenAmRequest struct {
+		BesprochenAm time.Time `json:"besprochenam"`
+	}
+
 	BenutzerBewertung struct {
 		Wertung  int    `json:"wertung"`
 		Benutzer string `json:"benutzer"`
@@ -269,6 +273,39 @@ func (h *filmkritikenHandler) loadImage(ginCtx *gin.Context) {
 	ginCtx.Writer.WriteHeader(http.StatusOK)
 	_, _ = ginCtx.Writer.Write(*imageBites)
 
+}
+
+func (h *filmkritikenHandler) handleSetBesprochenAm(ginCtx *gin.Context) {
+	filmkritikenId := ginCtx.Param("filmkritikenId")
+	if filmkritikenId == "" {
+		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
+		ginCtx.Writer.WriteString("Film muss angegeben werden")
+		return
+	}
+
+	req := &SetBesprochenAmRequest{}
+	err := ginCtx.ShouldBindJSON(req)
+	if err != nil {
+		log.Errorf("could not map json to SetBesprochenAmRequest: %v", err)
+		ginCtx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	err = h.filmkritikenService.UpdateBesprochenAm(ginCtx.Request.Context(), filmkritikenId, req.BesprochenAm)
+	if err != nil {
+		if _, ok := err.(*filmkritiken.NotFoundError); ok {
+			log.Warnf("could not find filmkritiken (%s): %v", filmkritikenId, err)
+			ginCtx.Writer.WriteHeader(http.StatusNotFound)
+			ginCtx.Writer.WriteString(err.Error())
+			return
+		}
+		log.Errorf("could not update besprochenAm: %v", err)
+		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
+		ginCtx.Writer.WriteString(err.Error())
+		return
+	}
+
+	ginCtx.Writer.WriteHeader(http.StatusNoContent)
 }
 
 func parseIntFromQueryParam(queryParams url.Values, paramName string) (int, error) {

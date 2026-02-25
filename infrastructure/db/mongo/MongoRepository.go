@@ -2,6 +2,8 @@ package mongo
 
 import (
 	"context"
+	"time"
+
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -71,7 +73,7 @@ func (repo *mongoDbRepository) GetFilmkritiken(ctx context.Context, filter *film
 	mongoFilter := bson.D{}
 
 	findOptions := options.Find().
-		SetSort(bson.D{{"details.besprochenam", -1}}).
+		SetSort(bson.D{{Key: "details.besprochenam", Value: -1}}).
 		SetLimit(int64(filter.Limit)).
 		SetSkip(int64(filter.Offset))
 	cursor, err := repo.database.Collection(filmkritikenCollectionName).Find(ctx, mongoFilter, findOptions)
@@ -149,5 +151,18 @@ func (repo *mongoDbRepository) SaveFilmkritiken(ctx context.Context, filmkritike
 		return err
 	}
 
+	return nil
+}
+
+func (repo *mongoDbRepository) UpdateBesprochenAm(ctx context.Context, filmkritikenId string, besprochenAm time.Time) error {
+	filter := bson.M{"_id": bson.M{"$eq": filmkritikenId}}
+	update := bson.D{primitive.E{Key: "$set", Value: bson.D{primitive.E{Key: "details.besprochenam", Value: besprochenAm}}}}
+	result, err := repo.database.Collection(filmkritikenCollectionName).UpdateOne(ctx, filter, update)
+	if err != nil {
+		return err
+	}
+	if result.MatchedCount == 0 {
+		return filmkritiken.NewNotFoundErrorFromString("Filmkritiken konnten nicht gefunden werden.")
+	}
 	return nil
 }

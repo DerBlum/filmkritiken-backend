@@ -1,8 +1,6 @@
 module github.com/DerBlum/filmkritiken-backend
 
-go 1.23.0
-
-toolchain go1.26.0
+go 1.26
 
 require (
 	github.com/caarlos0/env/v7 v7.1.0
@@ -72,3 +70,5 @@ require (
 	golang.org/x/tools v0.35.0 // indirect
 	google.golang.org/protobuf v1.36.9 // indirect
 )
+
+tool github.com/golang/mock/mockgen

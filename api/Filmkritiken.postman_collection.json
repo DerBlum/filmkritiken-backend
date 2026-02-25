@@ -583,6 +583,41 @@
 			"response": []
 		},
 		{
+			"name": "Set BesprochenAm",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"besprochenam\": \"2025-10-18T20:00:00Z\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/filmkritiken/:filmkritikenId/besprochenAm",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"filmkritiken",
+						":filmkritikenId",
+						"besprochenAm"
+					],
+					"variable": [
+						{
+							"key": "filmkritikenId",
+							"value": "60cdd824cc99fdf0c60a0f6d"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Add Wertung",
 			"request": {
 				"method": "PUT",
