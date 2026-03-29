@@ -1,25 +1,26 @@
 version: '3'
-services: 
+services:
     mongodb:
-        image: 'mongo'
+        image: 'mongo:8.2.5'
+        container_name: filmkritiken-mongodb
         environment:
             - MONGO_INITDB_DATABASE=mongodb
             - MONGO_INITDB_ROOT_USERNAME=mongorootuser
             - MONGO_INITDB_ROOT_PASSWORD=mongorootpw
-        volumes: 
+        volumes:
             - ./mongo/data:/data/db
         ports:
             - '27017-27019:27017-27019'
     mongo-express:
         image: 'mongo-express'
+        container_name: filmkritiken-mongo-express
         restart: unless-stopped
         environment:
-            - ME_CONFIG_MONGODB_SERVER=mongodb
+            - ME_CONFIG_MONGODB_SERVER=filmkritiken-mongodb
             - ME_CONFIG_MONGODB_ADMINUSERNAME=mongorootuser
             - ME_CONFIG_MONGODB_ADMINPASSWORD=mongorootpw
         ports:
             - "8081:8081"
-networks: 
+networks:
     default:
-        external: 
-            name: filmkritiken
+        name: filmkritiken

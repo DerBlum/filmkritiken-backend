@@ -5,10 +5,14 @@
   ],
   "packageRules": [
     {
-      "matchUpdateTypes": ["major"],
+      "minimumReleaseAge": "7 days",
+      "matchUpdateTypes": [
+        "major"
+      ],
       "dependencyDashboardApproval": true
     },
     {
+      "minimumReleaseAge": "7 days",
       "matchUpdateTypes": [
         "minor",
         "patch",
