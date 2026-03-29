@@ -1,7 +1,7 @@
 version: '3'
 services:
     mongodb:
-        image: 'mongo:8.2.5'
+        image: 'mongo:8.2.6'
         container_name: filmkritiken-mongodb
         environment:
             - MONGO_INITDB_DATABASE=mongodb
