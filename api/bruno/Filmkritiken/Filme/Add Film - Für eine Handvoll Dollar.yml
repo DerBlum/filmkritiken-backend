@@ -1,0 +1,43 @@
+info:
+  name: Add Film - Für eine Handvoll Dollar
+  type: http
+  seq: 12
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Dani",
+              "besprochenam": "2021-10-02T12:00:00Z",
+              "bewertungoffen": true,
+              "film": {
+                  "titel": "Für eine Handvoll Dollar",
+          		"originaltitel": "Per un pugno di dollari",
+                  "image": {
+                      "copyright": "IMDb"
+                  },
+                  "altersfreigabe": 16,
+                  "erscheinungsjahr": 1964,
+                  "regie": "Sergio Leone",
+                  "laenge": 100,
+                  "originalsprache": "Italienisch, Englisch, Spanisch",
+                  "produktionsland": "Italien, Spanien, Deutschland"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Pictures/Filmkritiken/FistfulOfDollars.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

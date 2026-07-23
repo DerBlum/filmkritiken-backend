@@ -1,0 +1,42 @@
+info:
+  name: Add Film - Citizen Kane
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Dani",
+              "besprochenam": "2021-06-13T12:00:00Z",
+              "bewertungoffen": true,
+              "film": {
+                  "titel": "Citizen Kane",
+                  "image": {
+                      "copyright": "IMDb"
+                  },
+                  "altersfreigabe": 12,
+                  "erscheinungsjahr": 1941,
+                  "regie": "Orson Welles",
+                  "laenge": 119,
+                  "originalsprache": "Englisch",
+                  "produktionsland": "Vereinigte Staaten"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Repositories/filmkritiken-frontend/src/assets/images/CitizenKane.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

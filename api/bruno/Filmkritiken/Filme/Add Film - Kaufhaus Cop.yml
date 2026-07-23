@@ -1,0 +1,43 @@
+info:
+  name: Add Film - Kaufhaus Cop
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Tiffy",
+              "besprochenam": "2021-06-19T12:00:00Z",
+              "bewertungoffen": true,
+              "film": {
+                  "titel": "Der Kaufhaus Cop",
+                  "image": {
+                      "copyright": "Moviepilot"
+                  },
+                  "altersfreigabe": 6,
+                  "erscheinungsjahr": 2009,
+                  "regie": "Steve Carr",
+                  "laenge": 87,
+                  "originalsprache": "Englisch",
+                  "produktionsland": "Vereinigte Staaten",
+                  "originaltitel": "Paul Blart: Mall Cop"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Pictures/Filmkritiken/MallCop.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

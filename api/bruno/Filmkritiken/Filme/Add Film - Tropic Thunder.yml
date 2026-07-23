@@ -1,0 +1,42 @@
+info:
+  name: Add Film - Tropic Thunder
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Flo",
+              "besprochenam": "2021-06-06T12:00:00Z",
+              "bewertungoffen": true,
+              "film": {
+                  "titel": "Tropic Thunder",
+                  "image": {
+                      "copyright": "IMDb"
+                  },
+                  "altersfreigabe": 16,
+                  "erscheinungsjahr": 2008,
+                  "regie": "Ben Stiller",
+                  "laenge": 106,
+                  "originalsprache": "Englisch",
+                  "produktionsland": "Vereinigte Staaten, Vereinigtes Königreich, Deutschland"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Repositories/filmkritiken-frontend/src/assets/images/TropicThunder.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

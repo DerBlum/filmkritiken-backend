@@ -1,0 +1,31 @@
+info:
+  name: Add Wertung
+  type: http
+  seq: 6
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/filmkritiken/:filmkritikenId/bewertungen/:user"
+  params:
+    - name: filmkritikenId
+      value: 60aa6cc52231a19ec2085ad7
+      type: path
+    - name: user
+      value: Stefan
+      type: path
+  body:
+    type: json
+    data: "{\r
+
+      \    \"filmkritikenId\": \"60afe969c607468de1efcebf\",\r
+
+      \    \"wertung\": 9\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

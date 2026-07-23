@@ -1,0 +1,43 @@
+info:
+  name: Add Film - Zombiber
+  type: http
+  seq: 11
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Flo",
+              "besprochenam": "2021-09-19T12:00:00Z",
+              "bewertungoffen": true,
+              "film": {
+                  "titel": "Zombiber",
+          		"originaltitel": "Zombeavers",
+                  "image": {
+                      "copyright": "IMDb"
+                  },
+                  "altersfreigabe": 16,
+                  "erscheinungsjahr": 2014,
+                  "regie": "Jordan Rubin",
+                  "laenge": 77,
+                  "originalsprache": "Englisch",
+                  "produktionsland": "Vereinigte Staaten"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Pictures/Filmkritiken/Zombiber.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

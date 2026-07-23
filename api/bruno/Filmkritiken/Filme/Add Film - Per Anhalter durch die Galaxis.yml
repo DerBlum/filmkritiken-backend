@@ -1,0 +1,43 @@
+info:
+  name: Add Film - Per Anhalter durch die Galaxis
+  type: http
+  seq: 13
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Tiffy",
+              "besprochenam": "2021-10-17T12:00:00Z",
+              "bewertungoffen": true,
+              "film": {
+                  "titel": "Per Anhalter durch die Galaxis",
+          		"originaltitel": "The Hitchhiker’s Guide to the Galaxy",
+                  "image": {
+                      "copyright": "IMDb"
+                  },
+                  "altersfreigabe": 6,
+                  "erscheinungsjahr": 2005,
+                  "regie": "Garth Jennings",
+                  "laenge": 110,
+                  "originalsprache": "Englisch",
+                  "produktionsland": "Vereinigtes Königreich"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Pictures/Filmkritiken/PerAnhalter.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

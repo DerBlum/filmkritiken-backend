@@ -1,0 +1,42 @@
+info:
+  name: Add Film - A Quiet Place
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Nico",
+              "besprochenam": "2021-06-26T12:00:00Z",
+              "bewertungoffen": true,
+              "film": {
+                  "titel": "A Quiet Place",
+                  "image": {
+                      "copyright": "IMDb"
+                  },
+                  "altersfreigabe": 16,
+                  "erscheinungsjahr": 2018,
+                  "regie": "John Krasinski",
+                  "laenge": 90,
+                  "originalsprache": "Englisch, Amerikanische Zeichensprache",
+                  "produktionsland": "Vereinigte Staaten"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Pictures/Filmkritiken/AQuietPlace.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,43 @@
+info:
+  name: Add Film - Karate Kid
+  type: http
+  seq: 10
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Stefan",
+              "besprochenam": "2021-08-28T12:00:00Z",
+              "bewertungoffen": false,
+              "film": {
+                  "titel": "Karate Kid",
+          		"originaltitel": "The Karate Kid",
+                  "image": {
+                      "copyright": "IMDb"
+                  },
+                  "altersfreigabe": 12,
+                  "erscheinungsjahr": 1984,
+                  "regie": "John G. Avildsen",
+                  "laenge": 126,
+                  "originalsprache": "Englisch",
+                  "produktionsland": "Vereinigte Staaten"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Pictures/Filmkritiken/KarateKid.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

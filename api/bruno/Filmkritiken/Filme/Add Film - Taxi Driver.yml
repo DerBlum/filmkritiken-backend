@@ -1,0 +1,42 @@
+info:
+  name: Add Film - Taxi Driver
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Dani",
+              "besprochenam": "2021-07-24T12:00:00Z",
+              "bewertungoffen": false,
+              "film": {
+                  "titel": "Taxi Driver",
+                  "image": {
+                      "copyright": "IMDb"
+                  },
+                  "altersfreigabe": 16,
+                  "erscheinungsjahr": 1976,
+                  "regie": "Martin Scorsese",
+                  "laenge": 114,
+                  "originalsprache": "Englisch",
+                  "produktionsland": "Vereinigte Staaten"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Pictures/Filmkritiken/TaxiDriver.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

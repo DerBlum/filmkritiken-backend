@@ -1,0 +1,26 @@
+info:
+  name: Set BesprochenAm
+  type: http
+  seq: 5
+
+http:
+  method: PATCH
+  url: "{{baseUrl}}/api/filmkritiken/:filmkritikenId/besprochenAm"
+  params:
+    - name: filmkritikenId
+      value: 60cdd824cc99fdf0c60a0f6d
+      type: path
+  body:
+    type: json
+    data: "{\r
+
+      \    \"besprochenam\": \"2025-10-18T20:00:00Z\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

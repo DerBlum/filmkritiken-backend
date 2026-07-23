@@ -1,0 +1,42 @@
+info:
+  name: Add Film - Guns Akimbo
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Tiffy",
+              "besprochenam": "2021-08-15T12:00:00Z",
+              "bewertungoffen": false,
+              "film": {
+                  "titel": "Guns Akimbo",
+                  "image": {
+                      "copyright": "IMDb"
+                  },
+                  "altersfreigabe": 16,
+                  "erscheinungsjahr": 2019,
+                  "regie": "Jason Lei Howden",
+                  "laenge": 97,
+                  "originalsprache": "Englisch",
+                  "produktionsland": "Neuseeland, Vereinigtes Königreich, Deutschland"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Pictures/Filmkritiken/GunsAkimbo.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

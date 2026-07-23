@@ -1,0 +1,22 @@
+info:
+  name: Bewertung öffnen / schließen
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{baseUrl}}/api/filmkritiken/:filmkritikenId/bewertungenoffen/:offen"
+  params:
+    - name: filmkritikenId
+      value: 60cdd824cc99fdf0c60a0f6d
+      type: path
+    - name: offen
+      value: "false"
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,43 @@
+info:
+  name: Add Film
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Nico",
+              "besprochenam": "2021-10-31T12:00:00Z",
+              "bewertungoffen": false,
+              "film": {
+                  "titel": "Alien vs. Predator 2",
+          		"originaltitel": "Aliens vs. Predator: Requiem",
+                  "image": {
+                      "copyright": "IMDb"
+                  },
+                  "altersfreigabe": 18,
+                  "erscheinungsjahr": 2007,
+                  "regie": "Colin Strause, Greg Strause",
+                  "laenge": 90,
+                  "originalsprache": "Englisch",
+                  "produktionsland": "Vereinigte Staaten, Kanada"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Pictures/Filmkritiken/AlienVsPredator2.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,43 @@
+info:
+  name: Add Film - Alien
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/filme"
+  body:
+    type: multipart-form
+    data:
+      - name: json
+        type: text
+        value: |-
+          {
+              "von": "Nico",
+              "besprochenam": "2021-08-21T12:00:00Z",
+              "bewertungoffen": false,
+              "film": {
+                  "titel": "Alien – Das unheimliche Wesen aus einer fremden Welt",
+          		"originaltitel": "Alien",
+                  "image": {
+                      "copyright": "IMDb"
+                  },
+                  "altersfreigabe": 16,
+                  "erscheinungsjahr": 1979,
+                  "regie": "Ridley Scott",
+                  "laenge": 117,
+                  "originalsprache": "Englisch",
+                  "produktionsland": "Vereinigtes Königreich, Vereinigte Staaten"
+              }
+          }
+      - name: image
+        type: file
+        value:
+          - /C:/Users/stefa/Pictures/Filmkritiken/Alien.jpg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

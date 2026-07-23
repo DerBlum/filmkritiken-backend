@@ -1,0 +1,6 @@
+name: CapRover
+variables:
+  - name: baseUrl
+    value: https://filmkritiken-backend.marsrover.418-teapot.de
+  - name: token
+    value: ""
