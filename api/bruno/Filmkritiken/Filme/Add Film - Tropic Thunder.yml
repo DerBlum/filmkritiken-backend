@@ -32,7 +32,7 @@ http:
       - name: image
         type: file
         value:
-          - /C:/Users/stefa/Repositories/filmkritiken-frontend/src/assets/images/TropicThunder.jpg
+          - C:\Users\stefa\Pictures\Filmkritiken\TropicThunder.jpg
   auth: inherit
 
 settings:

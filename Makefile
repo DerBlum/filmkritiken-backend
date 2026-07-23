@@ -8,7 +8,7 @@ run:
 	bash -c "set -a; source ./config/local.env; set +a && go run cmd/backend/main.go"
 run-docker:
 	docker network create filmkritiken || true
-	docker-compose up -d
+	docker compose up -d
 	docker stop filmkritiken-backend || true
 	docker rm filmkritiken-backend || true
 	docker rmi filmkritiken-backend || true

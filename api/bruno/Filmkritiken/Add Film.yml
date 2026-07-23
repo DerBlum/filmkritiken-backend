@@ -33,8 +33,7 @@ http:
       - name: image
         type: file
         value:
-          - /C:/Users/stefa/Pictures/Filmkritiken/AlienVsPredator2.jpg
-  auth: inherit
+          - C:\Users\stefa\Pictures\Filmkritiken\AlienVsPredator2.jpg
 
 settings:
   encodeUrl: true

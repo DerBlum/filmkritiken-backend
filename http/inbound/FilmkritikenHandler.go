@@ -84,28 +84,34 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ginCtx *gin.Context) {
 }
 
 func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
-	// read json
+	// read json (supports both file upload and plain form field)
+	var jsonBytes []byte
 	fileHeader, err := ginCtx.FormFile("json")
-	if err != nil {
+	if err == nil {
+		file, openErr := fileHeader.Open()
+		if openErr != nil {
+			log.Errorf("could not open json payload file: %v", openErr)
+			ginCtx.AbortWithStatus(http.StatusBadRequest)
+			return
+		}
+		defer file.Close()
+		readBytes, readErr := io.ReadAll(file)
+		if readErr != nil {
+			log.Errorf("could not read json payload file: %v", readErr)
+			ginCtx.AbortWithStatus(http.StatusBadRequest)
+			return
+		}
+		jsonBytes = readBytes
+	} else if jsonStr := ginCtx.PostForm("json"); jsonStr != "" {
+		jsonBytes = []byte(jsonStr)
+	} else {
 		log.Errorf("could not get json payload: %v", err)
-		ginCtx.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-	file, err := fileHeader.Open()
-	if err != nil {
-		log.Errorf("could not open json payload: %v", err)
-		ginCtx.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-	jsonBites, err := io.ReadAll(file)
-	if err != nil {
-		log.Errorf("could not read json payload: %v", err)
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
 	req := &FilmRequest{}
-	err = json.Unmarshal(jsonBites, &req)
+	err = json.Unmarshal(jsonBytes, &req)
 	if err != nil {
 		log.Errorf("could not map json to FilmRequest: %v", err)
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
@@ -119,12 +125,14 @@ func (h *filmkritikenHandler) handleCreateFilm(ginCtx *gin.Context) {
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	file, err = fileHeader.Open()
+	file, err := fileHeader.Open()
 	if err != nil {
 		log.Errorf("could not open uploaded image: %v", err)
 		ginCtx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
+	defer file.Close()
+
 	imageBites, err := io.ReadAll(file)
 	if err != nil {
 		log.Errorf("could not read uploaded image: %v", err)

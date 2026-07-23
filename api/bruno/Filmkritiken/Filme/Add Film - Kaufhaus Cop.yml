@@ -33,7 +33,7 @@ http:
       - name: image
         type: file
         value:
-          - /C:/Users/stefa/Pictures/Filmkritiken/MallCop.jpg
+          - C:\Users\stefa\Pictures\Filmkritiken\MallCop.jpg
   auth: inherit
 
 settings:
