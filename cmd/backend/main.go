@@ -28,13 +28,18 @@ func main() {
 		panic(err)
 	}
 
+	authConfig := httpInbound.AuthConfig{}
+	if err := env.Parse(&authConfig); err != nil {
+		panic(err)
+	}
+
 	mongoDbRepository, err := mongo.NewMongoDbRepository(context.Background(), &mongoConfig)
 	if err != nil {
 		panic(err)
 	}
 	filmkritikenService := filmkritiken.NewFilmkritikenService(mongoDbRepository, mongoDbRepository)
 
-	err = httpInbound.StartServer(&serverConfig, filmkritikenService)
+	err = httpInbound.StartServer(&serverConfig, &authConfig, filmkritikenService, mongoDbRepository)
 	if err != nil {
 		panic(err)
 	}

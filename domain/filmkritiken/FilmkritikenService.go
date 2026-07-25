@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"time"
+
+	"github.com/DerBlum/filmkritiken-backend/domain/errors"
 )
 
 type (
@@ -60,14 +62,14 @@ func (f *filmkritikenServiceImpl) CreateFilm(ctx context.Context, film *Film, fi
 
 	imageId, err := f.imageRepository.SaveImage(ctx, imageBites)
 	if err != nil {
-		return nil, NewRepositoryError(err)
+		return nil, errors.NewRepositoryError(err)
 	}
 	film.Image.Id = imageId
 
 	err = f.filmkritikenRepository.SaveFilmkritiken(ctx, filmkritiken)
 	if err != nil {
 		_ = f.imageRepository.DeleteImage(ctx, imageId)
-		return nil, NewRepositoryError(err)
+		return nil, errors.NewRepositoryError(err)
 	}
 
 	return filmkritiken, nil
@@ -85,7 +87,7 @@ func (f *filmkritikenServiceImpl) OpenCloseBewertungen(ctx context.Context, film
 	err = f.filmkritikenRepository.SaveFilmkritiken(ctx, filmkritiken)
 	if err != nil {
 		// TODO: anderer error string?
-		return NewRepositoryError(err)
+		return errors.NewRepositoryError(err)
 	}
 
 	return nil
@@ -95,7 +97,7 @@ func (f *filmkritikenServiceImpl) OpenCloseBewertungen(ctx context.Context, film
 func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId string, von string, wertung int) error {
 
 	if wertung < 1 || wertung > 10 {
-		return NewInvalidInputErrorFromString("Wertung muss zwischen 1 und 10 liegen.")
+		return errors.NewInvalidInputErrorFromString("Wertung muss zwischen 1 und 10 liegen.")
 	}
 
 	filmkritiken, err := f.filmkritikenRepository.FindFilmkritiken(ctx, filmkritikenId)
@@ -104,7 +106,7 @@ func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId 
 	}
 
 	if !filmkritiken.Details.BewertungOffen {
-		return NewInvalidInputErrorFromString(fmt.Sprintf("Die Bewertung von %s ist nicht mehr möglich.", filmkritiken.Film.Titel))
+		return errors.NewInvalidInputErrorFromString(fmt.Sprintf("Die Bewertung von %s ist nicht mehr möglich.", filmkritiken.Film.Titel))
 	}
 
 	found := false
@@ -128,7 +130,7 @@ func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId 
 	err = f.filmkritikenRepository.SaveFilmkritiken(ctx, filmkritiken)
 	if err != nil {
 		// TODO: anderer error string?
-		return NewRepositoryError(err)
+		return errors.NewRepositoryError(err)
 	}
 
 	return nil

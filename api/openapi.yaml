@@ -255,6 +255,73 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
+  /auth/login:
+    get:
+      summary: Redirect to EntraID Login
+      tags:
+        - Auth
+      responses:
+        "302":
+          description: Redirect to Microsoft EntraID authorization page
+
+  /auth/callback:
+    get:
+      summary: EntraID OAuth Callback
+      tags:
+        - Auth
+      parameters:
+        - in: query
+          name: code
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: state
+          required: true
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Redirect to Frontend after successful login
+        "400":
+          description: Invalid state or missing code
+
+  /auth/me:
+    get:
+      summary: Get current authenticated session user and permissions
+      tags:
+        - Auth
+      responses:
+        "200":
+          description: Authenticated user details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Max Mustermann"
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    example: ["film.add", "bewertung.add"]
+                required:
+                  - name
+                  - permissions
+        "401":
+          description: Unauthenticated or expired session
+
+  /auth/logout:
+    post:
+      summary: Terminate session and clear session cookie
+      tags:
+        - Auth
+      responses:
+        "204":
+          description: Session successfully terminated
+
 components:
   securitySchemes:
     bearerAuth:

@@ -1,4 +1,4 @@
-package filmkritiken
+package errors
 
 import (
 	"errors"
@@ -47,10 +47,10 @@ func NewInvalidInputErrorFromString(err string) *InvalidInputError {
 	return &InvalidInputError{errors.New(err)}
 }
 
-func (nfe *InvalidInputError) Error() string {
-	return nfe.err.Error()
+func (iie *InvalidInputError) Error() string {
+	return iie.err.Error()
 }
 
-func (nfe *InvalidInputError) Unwrap() error {
-	return nfe.err
+func (iie *InvalidInputError) Unwrap() error {
+	return iie.err
 }

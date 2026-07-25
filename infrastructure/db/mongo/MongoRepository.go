@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/DerBlum/filmkritiken-backend/domain/errors"
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -43,7 +44,7 @@ func (repo *mongoDbRepository) init(ctx context.Context, config *Config) error {
 	}
 
 	repo.database = client.Database(config.Database)
-	return nil
+	return repo.ensureIndexes(ctx)
 }
 
 func (repo *mongoDbRepository) FindFilmkritiken(ctx context.Context, filmkritikenId string) (*filmkritiken.Filmkritiken, error) {
@@ -53,7 +54,7 @@ func (repo *mongoDbRepository) FindFilmkritiken(ctx context.Context, filmkritike
 	err := repo.database.Collection(filmkritikenCollectionName).FindOne(ctx, mongoFilter).Decode(result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, filmkritiken.NewNotFoundErrorFromString("Filmkritiken konnten nicht gefunden werden.")
+			return nil, errors.NewNotFoundErrorFromString("Filmkritiken konnten nicht gefunden werden.")
 		}
 
 		return nil, err
@@ -109,7 +110,7 @@ func (repo *mongoDbRepository) FindImage(ctx context.Context, imageId string) (*
 	err := repo.database.Collection(imagesCollectionName).FindOne(ctx, mongoFilter).Decode(result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, filmkritiken.NewNotFoundErrorFromString("Bild konnte nicht gefunden werden.")
+			return nil, errors.NewNotFoundErrorFromString("Bild konnte nicht gefunden werden.")
 		}
 
 		return nil, err
@@ -155,7 +156,7 @@ func (repo *mongoDbRepository) UpdateBesprochenAm(ctx context.Context, filmkriti
 		return err
 	}
 	if result.MatchedCount == 0 {
-		return filmkritiken.NewNotFoundErrorFromString("Filmkritiken konnten nicht gefunden werden.")
+		return errors.NewNotFoundErrorFromString("Filmkritiken konnten nicht gefunden werden.")
 	}
 	return nil
 }

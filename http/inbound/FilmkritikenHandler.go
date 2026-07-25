@@ -3,6 +3,7 @@ package inbound
 import (
 	"encoding/json"
 	"fmt"
+	domainErrors "github.com/DerBlum/filmkritiken-backend/domain/errors"
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
@@ -189,7 +190,7 @@ func (h *filmkritikenHandler) handleOpenCloseBewertungen(ginCtx *gin.Context) {
 	err = h.filmkritikenService.OpenCloseBewertungen(ginCtx.Request.Context(), filmkritikenId, offen)
 
 	if err != nil {
-		if _, ok := err.(*filmkritiken.NotFoundError); ok {
+		if _, ok := err.(*domainErrors.NotFoundError); ok {
 			log.Warnf("could not find filmkritiken (%s): %v", filmkritikenId, err)
 			ginCtx.Writer.WriteHeader(http.StatusNotFound)
 			_, _ = ginCtx.Writer.WriteString(err.Error())
@@ -235,12 +236,12 @@ func (h *filmkritikenHandler) handleSetBewertung(ginCtx *gin.Context) {
 	err = h.filmkritikenService.SetKritik(requestContext, req.FilmkritikenId, username, req.Wertung)
 
 	if err != nil {
-		if _, ok := err.(*filmkritiken.InvalidInputError); ok {
+		if _, ok := err.(*domainErrors.InvalidInputError); ok {
 			ginCtx.Writer.WriteHeader(http.StatusBadRequest)
 			_, _ = ginCtx.Writer.WriteString(err.Error())
 			return
 		}
-		if _, ok := err.(*filmkritiken.NotFoundError); ok {
+		if _, ok := err.(*domainErrors.NotFoundError); ok {
 			log.Warnf("could not find filmkritiken (%s): %v", req.FilmkritikenId, err)
 			ginCtx.Writer.WriteHeader(http.StatusNotFound)
 			_, _ = ginCtx.Writer.WriteString(err.Error())
@@ -265,7 +266,7 @@ func (h *filmkritikenHandler) loadImage(ginCtx *gin.Context) {
 
 	imageBites, err := h.filmkritikenService.LoadImage(ginCtx.Request.Context(), imageId)
 	if err != nil {
-		if _, ok := err.(*filmkritiken.NotFoundError); ok {
+		if _, ok := err.(*domainErrors.NotFoundError); ok {
 			log.Warnf("could not find image (%s): %v", imageId, err)
 			ginCtx.Writer.WriteHeader(http.StatusNotFound)
 			_, _ = ginCtx.Writer.WriteString("Bild konnte nicht gefunden werden")
@@ -301,7 +302,7 @@ func (h *filmkritikenHandler) handleSetBesprochenAm(ginCtx *gin.Context) {
 
 	err = h.filmkritikenService.UpdateBesprochenAm(ginCtx.Request.Context(), filmkritikenId, req.BesprochenAm)
 	if err != nil {
-		if _, ok := err.(*filmkritiken.NotFoundError); ok {
+		if _, ok := err.(*domainErrors.NotFoundError); ok {
 			log.Warnf("could not find filmkritiken (%s): %v", filmkritikenId, err)
 			ginCtx.Writer.WriteHeader(http.StatusNotFound)
 			ginCtx.Writer.WriteString(err.Error())

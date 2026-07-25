@@ -2,13 +2,15 @@ package inbound
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
+	"github.com/DerBlum/filmkritiken-backend/domain/session"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
-	"time"
 )
 
 type ServerConfig struct {
@@ -25,7 +27,7 @@ func init() {
 	initPrometheusMetrics()
 }
 
-func StartServer(serverConfig *ServerConfig, filmkritikenService filmkritiken.FilmkritikenService) error {
+func StartServer(serverConfig *ServerConfig, authConfig *AuthConfig, filmkritikenService filmkritiken.FilmkritikenService, sessionRepo session.SessionRepository) error {
 	filmkritikenHandler := NewFilmkritikenHandler(filmkritikenService)
 
 	handlers := []gin.HandlerFunc{
@@ -55,6 +57,12 @@ func StartServer(serverConfig *ServerConfig, filmkritikenService filmkritiken.Fi
 		})
 	}
 	r.GET("/metrics", ginOmitLogMiddleware, metricsAuthHandler, gin.WrapH(promhttp.Handler()))
+
+	bffAuthHandler := NewBffAuthHandler(authConfig, sessionRepo)
+	r.GET("/auth/login", bffAuthHandler.handleLogin)
+	r.GET("/auth/callback", bffAuthHandler.handleCallback)
+	r.GET("/auth/me", bffAuthHandler.handleMe)
+	r.POST("/auth/logout", bffAuthHandler.handleLogout)
 
 	api := r.Group("/api", handlers...)
 	api.GET("/filmkritiken", metricsHandlerWrapper(filmkritikenHandler.handleGetFilmkritiken, "getFilmkritiken"))

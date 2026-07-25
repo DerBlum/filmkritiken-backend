@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	domainErrors "github.com/DerBlum/filmkritiken-backend/domain/errors"
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
 	"github.com/DerBlum/filmkritiken-backend/mocks"
 	"github.com/golang/mock/gomock"
@@ -89,7 +90,7 @@ func TestFilmkritikenServiceImpl_CreateFilm_ErrorSaveImage(t *testing.T) {
 		t.Error("expected error but got none")
 		return
 	}
-	var re *filmkritiken.RepositoryError
+	var re *domainErrors.RepositoryError
 	if !errors.As(err, &re) {
 		t.Errorf("Expected RepositoryError but got %v", err)
 	}
@@ -132,7 +133,7 @@ func TestFilmkritikenServiceImpl_CreateFilm_ErrorSaveFilmkritiken(t *testing.T) 
 		t.Error("expected error but got none")
 		return
 	}
-	var re *filmkritiken.RepositoryError
+	var re *domainErrors.RepositoryError
 	if !errors.As(err, &re) {
 		t.Errorf("Expected RepositoryError but got %v", err)
 	}
@@ -175,7 +176,7 @@ func TestFilmkritikenServiceImpl_UpdateBesprochenAm_NotFound(t *testing.T) {
 
 	filmkritikenRepository.EXPECT().
 		UpdateBesprochenAm(ctx, filmkritikenId, besprochenAm).
-		Return(filmkritiken.NewNotFoundErrorFromString("Filmkritiken konnten nicht gefunden werden."))
+		Return(domainErrors.NewNotFoundErrorFromString("Filmkritiken konnten nicht gefunden werden."))
 
 	service := filmkritiken.NewFilmkritikenService(filmkritikenRepository, imageRepository)
 
@@ -187,7 +188,7 @@ func TestFilmkritikenServiceImpl_UpdateBesprochenAm_NotFound(t *testing.T) {
 		t.Error("expected error but got none")
 		return
 	}
-	var nfe *filmkritiken.NotFoundError
+	var nfe *domainErrors.NotFoundError
 	if !errors.As(err, &nfe) {
 		t.Errorf("Expected NotFoundError but got %v", err)
 	}
