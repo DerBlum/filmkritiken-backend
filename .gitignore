@@ -19,7 +19,7 @@ main
 /mongo/
 /vendor/
 
-output/
+/output/
 
 # Lokale Secrets – nie committen
 /config/local.secrets.env
