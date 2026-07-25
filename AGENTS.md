@@ -13,7 +13,13 @@ Always prefix CLI commands with `rtk` (including chained commands with `&&`). RT
 
 ---
 
-## Agent skills
+## Sicherheitsregeln
+
+**NIEMALS** die Datei `config/local.secrets.env` lesen, loggen, ausgeben oder deren Inhalt in irgendeiner Form weitergeben. Diese Datei enthält lokale Credentials und ist gitignored.
+
+---
+
+
 
 ### Issue tracker
 

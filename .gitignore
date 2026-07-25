@@ -20,3 +20,6 @@ mongo/
 vendor/
 
 output/
+
+# Lokale Secrets – nie committen
+config/local.secrets.env

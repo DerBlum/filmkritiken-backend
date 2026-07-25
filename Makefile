@@ -10,7 +10,7 @@ test-coverage:
 	go test -short -json -coverprofile=test-coverage.out ./... > ./sonar-report.json
 
 run:
-	bash -c "set -a; source ./config/local.env; set +a && go run cmd/backend/main.go"
+	bash -c "set -a; source ./config/local.env; [ -f ./config/local.secrets.env ] && source ./config/local.secrets.env; set +a && go run cmd/backend/main.go"
 
 docker-up:
 	docker network create filmkritiken || true
@@ -41,6 +41,7 @@ run-docker: docker-up wait-mongo
 		--name filmkritiken-backend \
 		-p 8080:8080 \
 		--env-file ./config/local-docker.env \
+		$(shell [ -f ./config/local.secrets.env ] && echo --env-file ./config/local.secrets.env) \
 		filmkritiken-backend
 
 
