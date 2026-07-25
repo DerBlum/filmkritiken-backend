@@ -13,13 +13,13 @@ main
 *.out
 
 # IntelliJ
-.idea/
+/.idea/
 *.iml
-cmd/backend/__debug_bin
-mongo/
-vendor/
+/cmd/backend/__debug_bin
+/mongo/
+/vendor/
 
 output/
 
 # Lokale Secrets – nie committen
-config/local.secrets.env
+/config/local.secrets.env
