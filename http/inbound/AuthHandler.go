@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/DerBlum/filmkritiken-backend/domain/session"
@@ -18,6 +19,7 @@ const (
 	SessionCookieName    = "session_id"
 	StateCookieName      = "oauth_state"
 	VerifierCookieName   = "oauth_verifier"
+	RedirectCookieName   = "oauth_redirect"
 	SecondsPerDay        = 86400
 	OAuthStateTTLSeconds = 600
 	StateTokenBytes      = 16
@@ -82,6 +84,14 @@ func (h *BffAuthHandler) handleLogin(c *gin.Context) {
 
 	h.setCookie(c, StateCookieName, state, OAuthStateTTLSeconds)
 	h.setCookie(c, VerifierCookieName, verifier, OAuthStateTTLSeconds)
+
+	redirectPath := c.Query("redirect")
+	if redirectPath == "" {
+		redirectPath = c.Query("returnUrl")
+	}
+	if redirectPath != "" && strings.HasPrefix(redirectPath, "/") && !strings.HasPrefix(redirectPath, "//") {
+		h.setCookie(c, RedirectCookieName, redirectPath, OAuthStateTTLSeconds)
+	}
 
 	authURL := h.oauthConfig.AuthCodeURL(state, oauth2.S256ChallengeOption(verifier))
 	c.Redirect(http.StatusFound, authURL)
@@ -189,11 +199,16 @@ func (h *BffAuthHandler) handleCallback(c *gin.Context) {
 	maxAge := h.config.SessionDurationDays * SecondsPerDay
 	h.setCookie(c, SessionCookieName, newSession.ID, maxAge)
 
-	frontendURL := h.config.FrontendURL
-	if frontendURL == "" {
-		frontendURL = "/"
+	redirectCookie, _ := c.Cookie(RedirectCookieName)
+	h.setCookie(c, RedirectCookieName, "", -1)
+
+	frontendURL := strings.TrimRight(h.config.FrontendURL, "/")
+	targetPath := "/"
+	if redirectCookie != "" && strings.HasPrefix(redirectCookie, "/") && !strings.HasPrefix(redirectCookie, "//") {
+		targetPath = redirectCookie
 	}
-	c.Redirect(http.StatusFound, frontendURL+"/")
+
+	c.Redirect(http.StatusFound, frontendURL+targetPath)
 }
 
 func (h *BffAuthHandler) handleMe(c *gin.Context) {
