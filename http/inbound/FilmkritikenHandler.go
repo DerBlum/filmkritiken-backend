@@ -28,6 +28,7 @@ type (
 	SetBewertungRequest struct {
 		FilmkritikenId string `json:"filmkritikenId"`
 		Wertung        int    `json:"wertung"`
+		Enthaltung     bool   `json:"enthaltung"`
 	}
 
 	SetBewertungBulkRequest struct {
@@ -233,7 +234,7 @@ func (h *filmkritikenHandler) handleSetBewertung(ginCtx *gin.Context) {
 		return
 	}
 
-	err = h.filmkritikenService.SetKritik(requestContext, req.FilmkritikenId, username, req.Wertung)
+	err = h.filmkritikenService.SetKritik(requestContext, req.FilmkritikenId, username, req.Wertung, req.Enthaltung)
 
 	if err != nil {
 		if _, ok := err.(*domainErrors.InvalidInputError); ok {

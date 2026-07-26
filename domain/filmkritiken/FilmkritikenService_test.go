@@ -193,3 +193,97 @@ func TestFilmkritikenServiceImpl_UpdateBesprochenAm_NotFound(t *testing.T) {
 		t.Errorf("Expected NotFoundError but got %v", err)
 	}
 }
+
+func TestFilmkritikenServiceImpl_SetKritik_Success(t *testing.T) {
+	// given
+	ctrl := gomock.NewController(t)
+	filmkritikenRepository := mocks.NewMockFilmkritikenRepository(ctrl)
+	imageRepository := mocks.NewMockImageRepository(ctrl)
+
+	ctx := context.Background()
+	fkID := "fk_1"
+	user := "Stefan"
+	existingFK := &filmkritiken.Filmkritiken{
+		Id: fkID,
+		Film: &filmkritiken.Film{Titel: "Test Film"},
+		Details: &filmkritiken.FilmkritikenDetails{BewertungOffen: true},
+		Bewertungen: make([]*filmkritiken.Bewertung, 0),
+	}
+
+	filmkritikenRepository.EXPECT().FindFilmkritiken(ctx, fkID).Return(existingFK, nil)
+	filmkritikenRepository.EXPECT().SaveFilmkritiken(ctx, gomock.Any()).DoAndReturn(func(c context.Context, fk *filmkritiken.Filmkritiken) error {
+		if len(fk.Bewertungen) != 1 {
+			t.Errorf("expected 1 bewertung, got %d", len(fk.Bewertungen))
+		}
+		if fk.Bewertungen[0].Wertung != 8 || fk.Bewertungen[0].Enthaltung != false {
+			t.Errorf("unexpected bewertung values: %+v", fk.Bewertungen[0])
+		}
+		return nil
+	})
+
+	service := filmkritiken.NewFilmkritikenService(filmkritikenRepository, imageRepository)
+
+	// when
+	err := service.SetKritik(ctx, fkID, user, 8, false)
+
+	// then
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+}
+
+func TestFilmkritikenServiceImpl_SetKritik_Enthaltung(t *testing.T) {
+	// given
+	ctrl := gomock.NewController(t)
+	filmkritikenRepository := mocks.NewMockFilmkritikenRepository(ctrl)
+	imageRepository := mocks.NewMockImageRepository(ctrl)
+
+	ctx := context.Background()
+	fkID := "fk_1"
+	user := "Stefan"
+	existingFK := &filmkritiken.Filmkritiken{
+		Id: fkID,
+		Film: &filmkritiken.Film{Titel: "Test Film"},
+		Details: &filmkritiken.FilmkritikenDetails{BewertungOffen: true},
+		Bewertungen: make([]*filmkritiken.Bewertung, 0),
+	}
+
+	filmkritikenRepository.EXPECT().FindFilmkritiken(ctx, fkID).Return(existingFK, nil)
+	filmkritikenRepository.EXPECT().SaveFilmkritiken(ctx, gomock.Any()).DoAndReturn(func(c context.Context, fk *filmkritiken.Filmkritiken) error {
+		if len(fk.Bewertungen) != 1 {
+			t.Errorf("expected 1 bewertung, got %d", len(fk.Bewertungen))
+		}
+		if fk.Bewertungen[0].Enthaltung != true {
+			t.Errorf("expected enthaltung=true, got %+v", fk.Bewertungen[0])
+		}
+		return nil
+	})
+
+	service := filmkritiken.NewFilmkritikenService(filmkritikenRepository, imageRepository)
+
+	// when
+	err := service.SetKritik(ctx, fkID, user, 0, true)
+
+	// then
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+}
+
+func TestFilmkritikenServiceImpl_SetKritik_InvalidWertung(t *testing.T) {
+	// given
+	ctrl := gomock.NewController(t)
+	filmkritikenRepository := mocks.NewMockFilmkritikenRepository(ctrl)
+	imageRepository := mocks.NewMockImageRepository(ctrl)
+
+	ctx := context.Background()
+	service := filmkritiken.NewFilmkritikenService(filmkritikenRepository, imageRepository)
+
+	// when
+	err := service.SetKritik(ctx, "fk_1", "Stefan", 15, false)
+
+	// then
+	if err == nil {
+		t.Error("expected error for wertung 15, got none")
+	}
+}

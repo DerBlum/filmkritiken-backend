@@ -13,7 +13,7 @@ type (
 		GetFilmkritiken(ctx context.Context, filter *FilmkritikenFilter) ([]*Filmkritiken, error)
 		CreateFilm(ctx context.Context, film *Film, filmkritikenDetails *FilmkritikenDetails, imageBites *[]byte) (*Filmkritiken, error)
 		OpenCloseBewertungen(ctx context.Context, filmkritikenId string, offen bool) error
-		SetKritik(ctx context.Context, filmkritikenId string, von string, bewertung int) error
+		SetKritik(ctx context.Context, filmkritikenId string, von string, bewertung int, enthaltung bool) error
 		LoadImage(ctx context.Context, imageId string) (*[]byte, error)
 		UpdateBesprochenAm(ctx context.Context, filmkritikenId string, besprochenAm time.Time) error
 	}
@@ -94,9 +94,9 @@ func (f *filmkritikenServiceImpl) OpenCloseBewertungen(ctx context.Context, film
 
 }
 
-func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId string, von string, wertung int) error {
+func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId string, von string, wertung int, enthaltung bool) error {
 
-	if wertung < 1 || wertung > 10 {
+	if !enthaltung && (wertung < 1 || wertung > 10) {
 		return errors.NewInvalidInputErrorFromString("Wertung muss zwischen 1 und 10 liegen.")
 	}
 
@@ -113,6 +113,7 @@ func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId 
 	for _, bewertung := range filmkritiken.Bewertungen {
 		if bewertung.Von == von {
 			bewertung.Wertung = wertung
+			bewertung.Enthaltung = enthaltung
 			found = true
 			break
 		}
@@ -122,7 +123,7 @@ func (f *filmkritikenServiceImpl) SetKritik(ctx context.Context, filmkritikenId 
 			filmkritiken.Bewertungen, &Bewertung{
 				Von:        von,
 				Wertung:    wertung,
-				Enthaltung: false,
+				Enthaltung: enthaltung,
 			},
 		)
 	}

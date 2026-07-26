@@ -463,6 +463,10 @@ components:
           type: integer
           minimum: 1
           maximum: 10
+        enthaltung:
+          type: boolean
+          default: false
+          description: Wenn true, gilt die Abgabe als Enthaltung.
     SetBesprochenAmRequest:
       type: object
       properties:

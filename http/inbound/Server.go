@@ -69,22 +69,22 @@ func StartServer(serverConfig *ServerConfig, authConfig *AuthConfig, filmkritike
 	api.GET("/images/:imageId", metricsHandlerWrapper(filmkritikenHandler.loadImage, "loadImage"))
 	api.POST(
 		"/filme",
-		NewAuthHandler([]string{"film.add"}),
+		NewAuthHandler(sessionRepo, []string{"film.add"}),
 		metricsHandlerWrapper(filmkritikenHandler.handleCreateFilm, "createFilm"),
 	)
 	api.PUT(
 		"/filmkritiken/:filmkritikenId/bewertungen/:username",
-		NewAuthHandler([]string{"bewertung.add"}),
+		NewAuthHandler(sessionRepo, []string{"bewertung.add"}),
 		metricsHandlerWrapper(filmkritikenHandler.handleSetBewertung, "setBewertung"),
 	)
 	api.PATCH(
 		"/filmkritiken/:filmkritikenId/bewertungenoffen/:offen",
-		NewAuthHandler([]string{"bewertung.openclose"}),
+		NewAuthHandler(sessionRepo, []string{"bewertung.openclose"}),
 		metricsHandlerWrapper(filmkritikenHandler.handleOpenCloseBewertungen, "openCloseBewertungen"),
 	)
 	api.PATCH(
 		"/filmkritiken/:filmkritikenId/besprochenAm",
-		NewAuthHandler([]string{"film.add"}),
+		NewAuthHandler(sessionRepo, []string{"film.add"}),
 		filmkritikenHandler.handleSetBesprochenAm,
 	)
 	err := r.Run()

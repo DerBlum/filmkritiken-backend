@@ -96,17 +96,17 @@ func (mr *MockFilmkritikenServiceMockRecorder) OpenCloseBewertungen(ctx, filmkri
 }
 
 // SetKritik mocks base method.
-func (m *MockFilmkritikenService) SetKritik(ctx context.Context, filmkritikenId, von string, bewertung int) error {
+func (m *MockFilmkritikenService) SetKritik(ctx context.Context, filmkritikenId, von string, bewertung int, enthaltung bool) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetKritik", ctx, filmkritikenId, von, bewertung)
+	ret := m.ctrl.Call(m, "SetKritik", ctx, filmkritikenId, von, bewertung, enthaltung)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SetKritik indicates an expected call of SetKritik.
-func (mr *MockFilmkritikenServiceMockRecorder) SetKritik(ctx, filmkritikenId, von, bewertung interface{}) *gomock.Call {
+func (mr *MockFilmkritikenServiceMockRecorder) SetKritik(ctx, filmkritikenId, von, bewertung, enthaltung interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetKritik", reflect.TypeOf((*MockFilmkritikenService)(nil).SetKritik), ctx, filmkritikenId, von, bewertung)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetKritik", reflect.TypeOf((*MockFilmkritikenService)(nil).SetKritik), ctx, filmkritikenId, von, bewertung, enthaltung)
 }
 
 // UpdateBesprochenAm mocks base method.

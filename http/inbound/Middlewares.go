@@ -2,21 +2,15 @@ package inbound
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"net/http"
-	"strings"
+	"time"
 
 	"github.com/DerBlum/filmkritiken-backend/domain/filmkritiken"
+	"github.com/DerBlum/filmkritiken-backend/domain/session"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	"github.com/lestrrat-go/jwx/v3/jwk"
 	log "github.com/sirupsen/logrus"
 )
-
-var jwkUrl = "https://login.microsoftonline.com/865638a4-e4fb-4aef-89e1-6824acc3a785/discovery/v2.0/keys"
-var jwkSet jwk.Set
 
 func TraceIdMiddleware(ginCtx *gin.Context) {
 	id := generateTraceId()
@@ -38,110 +32,53 @@ func NewEmptyHandler() func(ginCtx *gin.Context) {
 	}
 }
 
-func NewAuthHandler(allowedRoles []string) func(ginCtx *gin.Context) {
+func NewAuthHandler(sessionRepo session.SessionRepository, allowedRoles []string) func(ginCtx *gin.Context) {
 	return func(ginCtx *gin.Context) {
-		authHandler(ginCtx, allowedRoles)
+		authHandler(ginCtx, sessionRepo, allowedRoles)
 	}
 }
 
-func authHandler(ginCtx *gin.Context, allowedRoles []string) {
-	authHeader := ginCtx.Request.Header["Authorization"]
-
-	if len(authHeader) == 0 {
-		log.Warn("received request without auth header")
+func authHandler(ginCtx *gin.Context, sessionRepo session.SessionRepository, allowedRoles []string) {
+	if sessionRepo == nil {
+		log.Warn("sessionRepo not configured in authHandler")
 		ginCtx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
-	// "Bearer ..."
-	fields := strings.Fields(authHeader[0])
-	if len(fields) <= 1 || fields[0] != "Bearer" {
-		log.Warn("received request with malformed auth header")
+	sessionID, err := ginCtx.Cookie(SessionCookieName)
+	if err != nil || sessionID == "" {
+		log.Warn("received request without valid session cookie")
 		ginCtx.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
-	tokenString := fields[1]
+	sess, err := sessionRepo.FindSession(ginCtx.Request.Context(), sessionID)
+	if err != nil || sess == nil || sess.ExpiresAt.Before(time.Now()) {
+		log.Warnf("session invalid or expired: %v", err)
+		ginCtx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
 
-	token, err := jwt.Parse(tokenString, getKey)
-	if err != nil {
-		log.Errorf("could not parse jwt token: %v", err)
+	if !hasSessionRole(allowedRoles, sess.Permissions) {
+		log.Warnf("session user %s lacks required roles %v", sess.Name, allowedRoles)
 		ginCtx.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 
-	if !token.Valid {
-		log.Warnf("client tried accessing endpoint with invalid token: %v", err)
-		ginCtx.AbortWithStatus(http.StatusForbidden)
-		return
-	}
-
-	if !hasRole(allowedRoles, token) {
-		log.Warnf("client tried accessing endpoint without roles (%s): %v", allowedRoles, err)
-		ginCtx.AbortWithStatus(http.StatusForbidden)
-		return
-	}
-
-	err = setUsername(ginCtx, token)
-	if err != nil {
-		log.Errorf("could not extract username: %v", err)
-		ginCtx.AbortWithStatus(http.StatusForbidden)
-		return
-	}
-
+	newCtx := context.WithValue(ginCtx.Request.Context(), filmkritiken.Context_Username, sess.Name)
+	ginCtx.Request = ginCtx.Request.WithContext(newCtx)
 }
 
-func getKey(token *jwt.Token) (interface{}, error) {
-	// Get JWK Set from JWKS endpoint
-	if jwkSet == nil {
-		set, err := jwk.Fetch(context.Background(), jwkUrl)
-		if err != nil {
-			return nil, err
-		}
-		jwkSet = set
+func hasSessionRole(allowedRoles []string, userPermissions []string) bool {
+	if len(allowedRoles) == 0 {
+		return true
 	}
-
-	keyId, ok := token.Header["kid"].(string)
-	if !ok {
-		return nil, errors.New("JWT Header did not include kid")
-	}
-
-	if key, ok := jwkSet.LookupKeyID(keyId); ok {
-		var rawKey interface{}
-		if err := jwk.Export(key, &rawKey); err != nil {
-			return nil, fmt.Errorf("error getting raw key id from jwkSet: %w", err)
-		}
-
-		return rawKey, nil
-	}
-
-	return nil, fmt.Errorf("unable to find key %s", keyId)
-}
-
-func hasRole(allowedRoles []string, token *jwt.Token) bool {
-	claims := token.Claims.(jwt.MapClaims)
-	tokenRoles := claims["roles"].([]interface{})
-
-	for _, tokenRole := range tokenRoles {
-		for _, allowedRole := range allowedRoles {
-			if allowedRole == tokenRole {
+	for _, role := range userPermissions {
+		for _, allowed := range allowedRoles {
+			if role == allowed {
 				return true
 			}
 		}
 	}
-
 	return false
-}
-
-func setUsername(ginCtx *gin.Context, token *jwt.Token) error {
-	claims := token.Claims.(jwt.MapClaims)
-	name, ok := claims["name"].(string)
-	if !ok {
-		return fmt.Errorf("could not extract name from claims: %v", claims)
-	}
-
-	newCtx := context.WithValue(ginCtx.Request.Context(), filmkritiken.Context_Username, name)
-	ginCtx.Request = ginCtx.Request.WithContext(newCtx)
-
-	return nil
 }
