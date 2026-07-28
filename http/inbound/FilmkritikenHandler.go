@@ -45,6 +45,11 @@ type (
 		Benutzer string `json:"benutzer"`
 	}
 
+	FilmkritikenPageResponse struct {
+		Items      []*filmkritiken.Filmkritiken `json:"items"`
+		TotalCount int64                        `json:"totalCount"`
+	}
+
 	filmkritikenHandler struct {
 		filmkritikenService filmkritiken.FilmkritikenService
 	}
@@ -61,22 +66,73 @@ func (h *filmkritikenHandler) handleGetFilmkritiken(ginCtx *gin.Context) {
 	offset := 0
 
 	queryParams := ginCtx.Request.URL.Query()
-	parsedValue, err := parseIntFromQueryParam(queryParams, "limit")
-	if err == nil {
+	if parsedValue, err := parseIntFromQueryParam(queryParams, "limit"); err == nil {
 		limit = parsedValue
 	}
-	parsedValue, err = parseIntFromQueryParam(queryParams, "offset")
-	if err == nil {
+	if parsedValue, err := parseIntFromQueryParam(queryParams, "offset"); err == nil {
 		offset = parsedValue
 	}
 
-	filter := &filmkritiken.FilmkritikenFilter{
-		Limit:  limit,
-		Offset: offset,
+	suche := queryParams.Get("suche")
+	if suche == "" {
+		suche = queryParams.Get("titel")
 	}
-	result, err := h.filmkritikenService.GetFilmkritiken(ginCtx.Request.Context(), filter)
+	jahr, _ := parseIntFromQueryParam(queryParams, "jahr")
+	beitragvon := queryParams.Get("beitragvon")
+	sortierung := queryParams.Get("sortierung")
+
+	filter := &filmkritiken.FilmkritikenFilter{
+		Limit:      limit,
+		Offset:     offset,
+		Suche:      suche,
+		Titel:      suche,
+		Jahr:       jahr,
+		BeitragVon: beitragvon,
+		Sortierung: sortierung,
+	}
+	result, totalCount, err := h.filmkritikenService.GetFilmkritiken(ginCtx.Request.Context(), filter)
 	if err != nil {
 		log.Errorf("Could not get Filmkritiken from DB: %v", err)
+		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
+		_, _ = ginCtx.Writer.WriteString("Could not get Filmkritiken from DB")
+		return
+	}
+
+	ginCtx.JSON(http.StatusOK, FilmkritikenPageResponse{
+		Items:      result,
+		TotalCount: totalCount,
+	})
+}
+
+func (h *filmkritikenHandler) handleGetFilterOptions(ginCtx *gin.Context) {
+	opts, err := h.filmkritikenService.GetFilterOptions(ginCtx.Request.Context())
+	if err != nil {
+		log.Errorf("Could not get FilterOptions: %v", err)
+		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
+		_, _ = ginCtx.Writer.WriteString("Could not get FilterOptions")
+		return
+	}
+
+	ginCtx.JSON(http.StatusOK, opts)
+}
+
+func (h *filmkritikenHandler) handleGetFilmkritikById(ginCtx *gin.Context) {
+	filmkritikenId := ginCtx.Param("filmkritikenId")
+	if filmkritikenId == "" {
+		ginCtx.Writer.WriteHeader(http.StatusBadRequest)
+		_, _ = ginCtx.Writer.WriteString("Film muss angegeben werden")
+		return
+	}
+
+	result, err := h.filmkritikenService.GetFilmkritikById(ginCtx.Request.Context(), filmkritikenId)
+	if err != nil {
+		if _, ok := err.(*domainErrors.NotFoundError); ok {
+			log.Warnf("could not find filmkritiken (%s): %v", filmkritikenId, err)
+			ginCtx.Writer.WriteHeader(http.StatusNotFound)
+			_, _ = ginCtx.Writer.WriteString(err.Error())
+			return
+		}
+		log.Errorf("could not get filmkritiken (%s): %v", filmkritikenId, err)
 		ginCtx.Writer.WriteHeader(http.StatusInternalServerError)
 		_, _ = ginCtx.Writer.WriteString("Could not get Filmkritiken from DB")
 		return

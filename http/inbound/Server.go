@@ -66,6 +66,8 @@ func StartServer(serverConfig *ServerConfig, authConfig *AuthConfig, filmkritike
 
 	api := r.Group("/api", handlers...)
 	api.GET("/filmkritiken", metricsHandlerWrapper(filmkritikenHandler.handleGetFilmkritiken, "getFilmkritiken"))
+	api.GET("/filmkritiken/filter-options", metricsHandlerWrapper(filmkritikenHandler.handleGetFilterOptions, "getFilterOptions"))
+	api.GET("/filmkritiken/:filmkritikenId", metricsHandlerWrapper(filmkritikenHandler.handleGetFilmkritikById, "getFilmkritikById"))
 	api.GET("/images/:imageId", metricsHandlerWrapper(filmkritikenHandler.loadImage, "loadImage"))
 	api.POST(
 		"/filme",

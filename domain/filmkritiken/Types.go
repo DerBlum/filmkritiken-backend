@@ -51,7 +51,17 @@ type (
 	}
 
 	FilmkritikenFilter struct {
-		Limit  int
-		Offset int
+		Limit      int
+		Offset     int
+		Suche      string
+		Titel      string
+		Jahr       int
+		BeitragVon string
+		Sortierung string
+	}
+
+	FilterOptions struct {
+		Jahre       []int    `json:"jahre"`
+		Beitragende []string `json:"beitragende"`
 	}
 )

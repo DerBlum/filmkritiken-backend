@@ -52,12 +52,13 @@ func (mr *MockFilmkritikenServiceMockRecorder) CreateFilm(ctx, film, filmkritike
 }
 
 // GetFilmkritiken mocks base method.
-func (m *MockFilmkritikenService) GetFilmkritiken(ctx context.Context, filter *filmkritiken.FilmkritikenFilter) ([]*filmkritiken.Filmkritiken, error) {
+func (m *MockFilmkritikenService) GetFilmkritiken(ctx context.Context, filter *filmkritiken.FilmkritikenFilter) ([]*filmkritiken.Filmkritiken, int64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetFilmkritiken", ctx, filter)
 	ret0, _ := ret[0].([]*filmkritiken.Filmkritiken)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret1, _ := ret[1].(int64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // GetFilmkritiken indicates an expected call of GetFilmkritiken.
@@ -162,12 +163,13 @@ func (mr *MockFilmkritikenRepositoryMockRecorder) FindFilmkritiken(ctx, filmkrit
 }
 
 // GetFilmkritiken mocks base method.
-func (m *MockFilmkritikenRepository) GetFilmkritiken(ctx context.Context, filter *filmkritiken.FilmkritikenFilter) ([]*filmkritiken.Filmkritiken, error) {
+func (m *MockFilmkritikenRepository) GetFilmkritiken(ctx context.Context, filter *filmkritiken.FilmkritikenFilter) ([]*filmkritiken.Filmkritiken, int64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetFilmkritiken", ctx, filter)
 	ret0, _ := ret[0].([]*filmkritiken.Filmkritiken)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret1, _ := ret[1].(int64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // GetFilmkritiken indicates an expected call of GetFilmkritiken.

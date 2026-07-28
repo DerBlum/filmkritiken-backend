@@ -21,7 +21,7 @@ paths:
           schema:
             type: integer
             minimum: 1
-            maximum: 50
+            maximum: 100
             default: 10
         - in: query
           name: offset
@@ -29,15 +29,83 @@ paths:
           schema:
             type: integer
             minimum: 0
+        - in: query
+          name: suche
+          required: false
+          description: Freitext-Suche im Titel und Originaltitel
+          schema:
+            type: string
+        - in: query
+          name: titel
+          required: false
+          description: Freitext-Suche im Titel
+          schema:
+            type: string
+        - in: query
+          name: jahr
+          required: false
+          description: Filter nach dem Besprechungsjahr
+          schema:
+            type: integer
+        - in: query
+          name: beitragvon
+          required: false
+          description: Filter nach dem Benutzer, der den Beitrag eingereicht hat
+          schema:
+            type: string
+        - in: query
+          name: sortierung
+          required: false
+          description: Sortierung der Ergebnisse
+          schema:
+            type: string
+            enum: [neueste, aelteste, beste]
+            default: neueste
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Filmkritiken"
+                $ref: "#/components/schemas/FilmkritikenPageResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /api/filmkritiken/filter-options:
+    get:
+      description: Retrieves available filter options (years and contributors)
+      tags:
+        - Filmkritiken
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FilterOptions"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /api/filmkritiken/{filmkritikenId}:
+    get:
+      description: Retrieves a single Filmkritik by ID
+      tags:
+        - Filmkritiken
+      parameters:
+        - in: path
+          name: filmkritikenId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Filmkritiken"
+        "404":
+          description: Filmkritik not found
         "500":
           $ref: "#/components/responses/InternalError"
 
@@ -330,6 +398,19 @@ components:
       bearerFormat: JWT
 
   schemas:
+    FilmkritikenPageResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Filmkritiken"
+        totalCount:
+          type: integer
+          example: 25
+      required:
+        - items
+        - totalCount
     Filmkritiken:
       type: object
       properties:
@@ -497,6 +578,20 @@ components:
         benutzer:
           type: string
           description: Benutzer, für den die Wertung gilt.
+    FilterOptions:
+      type: object
+      properties:
+        jahre:
+          type: array
+          items:
+            type: integer
+        beitragende:
+          type: array
+          items:
+            type: string
+      required:
+        - jahre
+        - beitragende
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid

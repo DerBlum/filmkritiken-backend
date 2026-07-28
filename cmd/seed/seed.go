@@ -11,13 +11,13 @@ import (
 )
 
 type Repository interface {
-	GetFilmkritiken(ctx context.Context, filter *filmkritiken.FilmkritikenFilter) ([]*filmkritiken.Filmkritiken, error)
+	GetFilmkritiken(ctx context.Context, filter *filmkritiken.FilmkritikenFilter) ([]*filmkritiken.Filmkritiken, int64, error)
 	SaveImage(ctx context.Context, imageBites *[]byte) (string, error)
 	SaveFilmkritiken(ctx context.Context, filmkritiken *filmkritiken.Filmkritiken) error
 }
 
 func seedIfEmpty(ctx context.Context, repo Repository) error {
-	existing, err := repo.GetFilmkritiken(ctx, &filmkritiken.FilmkritikenFilter{Limit: 1})
+	existing, _, err := repo.GetFilmkritiken(ctx, &filmkritiken.FilmkritikenFilter{Limit: 1})
 	if err != nil {
 		log.Warnf("Could not check if database is empty: %v", err)
 	} else if len(existing) > 0 {

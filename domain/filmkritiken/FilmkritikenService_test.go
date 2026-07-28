@@ -287,3 +287,73 @@ func TestFilmkritikenServiceImpl_SetKritik_InvalidWertung(t *testing.T) {
 		t.Error("expected error for wertung 15, got none")
 	}
 }
+
+func TestFilmkritikenServiceImpl_GetFilmkritiken(t *testing.T) {
+	// given
+	ctrl := gomock.NewController(t)
+	filmkritikenRepository := mocks.NewMockFilmkritikenRepository(ctrl)
+	imageRepository := mocks.NewMockImageRepository(ctrl)
+
+	ctx := context.Background()
+	filter := &filmkritiken.FilmkritikenFilter{
+		Limit:      10,
+		Suche:      "Matrix",
+		Sortierung: "neueste",
+	}
+
+	expectedResult := []*filmkritiken.Filmkritiken{
+		{Id: "fk_1", Film: &filmkritiken.Film{Titel: "Matrix"}},
+	}
+
+	filmkritikenRepository.EXPECT().GetFilmkritiken(ctx, filter).Return(expectedResult, int64(1), nil)
+
+	service := filmkritiken.NewFilmkritikenService(filmkritikenRepository, imageRepository)
+
+	// when
+	result, totalCount, err := service.GetFilmkritiken(ctx, filter)
+
+	// then
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if totalCount != 1 {
+		t.Errorf("expected totalCount 1, got %d", totalCount)
+	}
+	if len(result) != 1 {
+		t.Errorf("expected 1 result, got %d", len(result))
+	}
+}
+
+func TestFilmkritikenServiceImpl_GetFilterOptions_Caching(t *testing.T) {
+	// given
+	ctrl := gomock.NewController(t)
+	filmkritikenRepository := mocks.NewMockFilmkritikenRepository(ctrl)
+	imageRepository := mocks.NewMockImageRepository(ctrl)
+
+	ctx := context.Background()
+	expectedOpts := &filmkritiken.FilterOptions{
+		Jahre:       []int{2024, 2023},
+		Beitragende: []string{"Alice", "Bob"},
+	}
+
+	// Expect GetFilterOptions to be called ONLY ONCE on repo due to caching
+	filmkritikenRepository.EXPECT().GetFilterOptions(ctx).Return(expectedOpts, nil).Times(1)
+
+	service := filmkritiken.NewFilmkritikenService(filmkritikenRepository, imageRepository)
+
+	// First call -> fetches from repo
+	opts1, err1 := service.GetFilterOptions(ctx)
+	if err1 != nil {
+		t.Fatalf("unexpected error 1: %v", err1)
+	}
+
+	// Second call -> returns cached result without hitting repo
+	opts2, err2 := service.GetFilterOptions(ctx)
+	if err2 != nil {
+		t.Fatalf("unexpected error 2: %v", err2)
+	}
+
+	if len(opts1.Jahre) != len(opts2.Jahre) || len(opts1.Beitragende) != len(opts2.Beitragende) {
+		t.Errorf("cached options mismatch: %+v vs %+v", opts1, opts2)
+	}
+}
