@@ -51,6 +51,21 @@ func (mr *MockFilmkritikenServiceMockRecorder) CreateFilm(ctx, film, filmkritike
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFilm", reflect.TypeOf((*MockFilmkritikenService)(nil).CreateFilm), ctx, film, filmkritikenDetails, imageBites)
 }
 
+// GetFilmkritikById mocks base method.
+func (m *MockFilmkritikenService) GetFilmkritikById(ctx context.Context, id string) (*filmkritiken.Filmkritiken, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFilmkritikById", ctx, id)
+	ret0, _ := ret[0].(*filmkritiken.Filmkritiken)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFilmkritikById indicates an expected call of GetFilmkritikById.
+func (mr *MockFilmkritikenServiceMockRecorder) GetFilmkritikById(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFilmkritikById", reflect.TypeOf((*MockFilmkritikenService)(nil).GetFilmkritikById), ctx, id)
+}
+
 // GetFilmkritiken mocks base method.
 func (m *MockFilmkritikenService) GetFilmkritiken(ctx context.Context, filter *filmkritiken.FilmkritikenFilter) ([]*filmkritiken.Filmkritiken, int64, error) {
 	m.ctrl.T.Helper()
@@ -65,6 +80,21 @@ func (m *MockFilmkritikenService) GetFilmkritiken(ctx context.Context, filter *f
 func (mr *MockFilmkritikenServiceMockRecorder) GetFilmkritiken(ctx, filter interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFilmkritiken", reflect.TypeOf((*MockFilmkritikenService)(nil).GetFilmkritiken), ctx, filter)
+}
+
+// GetFilterOptions mocks base method.
+func (m *MockFilmkritikenService) GetFilterOptions(ctx context.Context) (*filmkritiken.FilterOptions, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFilterOptions", ctx)
+	ret0, _ := ret[0].(*filmkritiken.FilterOptions)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFilterOptions indicates an expected call of GetFilterOptions.
+func (mr *MockFilmkritikenServiceMockRecorder) GetFilterOptions(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFilterOptions", reflect.TypeOf((*MockFilmkritikenService)(nil).GetFilterOptions), ctx)
 }
 
 // LoadImage mocks base method.
@@ -176,6 +206,21 @@ func (m *MockFilmkritikenRepository) GetFilmkritiken(ctx context.Context, filter
 func (mr *MockFilmkritikenRepositoryMockRecorder) GetFilmkritiken(ctx, filter interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFilmkritiken", reflect.TypeOf((*MockFilmkritikenRepository)(nil).GetFilmkritiken), ctx, filter)
+}
+
+// GetFilterOptions mocks base method.
+func (m *MockFilmkritikenRepository) GetFilterOptions(ctx context.Context) (*filmkritiken.FilterOptions, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFilterOptions", ctx)
+	ret0, _ := ret[0].(*filmkritiken.FilterOptions)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFilterOptions indicates an expected call of GetFilterOptions.
+func (mr *MockFilmkritikenRepositoryMockRecorder) GetFilterOptions(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFilterOptions", reflect.TypeOf((*MockFilmkritikenRepository)(nil).GetFilterOptions), ctx)
 }
 
 // SaveFilmkritiken mocks base method.
