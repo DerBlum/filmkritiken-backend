@@ -1,6 +1,6 @@
 module github.com/DerBlum/filmkritiken-backend
 
-go 1.26
+go 1.26.0
 
 require (
 	github.com/caarlos0/env/v11 v11.4.1
@@ -12,7 +12,7 @@ require (
 	github.com/prometheus/client_golang v1.24.1
 	github.com/sirupsen/logrus v1.10.2
 	go.mongodb.org/mongo-driver/v2 v2.8.2
-	golang.org/x/oauth2 v0.36.0
+	golang.org/x/oauth2 v0.37.0
 )
 
 require (
