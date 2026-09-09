@@ -23,8 +23,8 @@ jobs:
       - name: CapRover deploy with Token
         uses: caprover/deploy-from-github@v1.2.0
         with:          
-          server: 'https://captain.marsrover.418-teapot.de'
-          app: 'filmkritiken-backend'
+          server: '${{ secrets.CAPROVER_SERVER }}'
+          app: '${{ secrets.CAPROVER_APP_NAME }}'
           token: '${{ secrets.CAPROVER_APP_TOKEN }}'
           image: '${{ env.FULL_IMAGE_NAME }}'
 
