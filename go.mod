@@ -12,7 +12,7 @@ require (
 	github.com/prometheus/client_golang v1.25.0
 	github.com/sirupsen/logrus v1.10.2
 	go.mongodb.org/mongo-driver/v2 v2.9.3
-	golang.org/x/oauth2 v0.37.0
+	golang.org/x/oauth2 v0.38.0
 )
 
 require (
